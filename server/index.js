@@ -40,6 +40,8 @@ io.on("connection", (socket) => {
         rooms[i].players.push(socket.id);
         socket.join(currentRoom);
         console.log(`Player: ${socket.id}, Joined Room: ${currentRoom}`)
+        
+        socket.broadcast.emit("roomJoined", rooms[i]);
         socket.emit("roomJoined", rooms[i]);
         return;
       }
@@ -71,8 +73,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log(currentRoom)
-
     if (!currentRoom) {
       return;
     }
@@ -89,8 +89,6 @@ io.on("connection", (socket) => {
       }
     }
   });
-
-  console.log(rooms)
 });
 
 server.listen(3001, () => {

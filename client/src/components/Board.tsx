@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import { Socket } from "socket.io-client";
+
+import PlayerScore from "./PlayerScore";
+import WaitingForPlayer from "./WaitingForPlayer";
+
 import yellowMarker from "../assets/marker-yellow.svg";
+import redMarker from "../assets/marker-red.svg";
 
 function Board({ socket, room }: { socket: Socket; room: any }) {
   const boardProto = [
@@ -13,19 +18,27 @@ function Board({ socket, room }: { socket: Socket; room: any }) {
     [null, null, null, null, null, null],
   ];
 
+  const handelRowClick = (index: number) => {
+    console.log(index);
+  };
+
   return (
     <Conteiner>
       <LobbyTitle>Lobby: {room.lobbyName}</LobbyTitle>
+
+      <PlayerScore player="playerOne" />
       <Plate>
-        {boardProto.map((items) => (
-          <PlateRow>
-            <RowPointer id="arrow" src={yellowMarker} />
+        {boardProto.map((items, index) => (
+          <PlateRow onClick={() => handelRowClick(index)}>
+            <RowPointer id="arrow" src={redMarker} />
             {items.map(() => (
               <Chip />
             ))}
           </PlateRow>
         ))}
       </Plate>
+      <PlayerScore player="playerTwo" />
+      {room.players.length < 2 && <WaitingForPlayer />}
     </Conteiner>
   );
 }
@@ -45,6 +58,7 @@ const RowPointer = styled.img`
   display: none;
   top: -56px;
   transform: scale(0.57);
+  user-select: none;
 `;
 const PlateRow = styled.div`
   position: relative;
@@ -63,9 +77,10 @@ const Conteiner = styled.div`
   height: 100%;
 
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  gap: 35px;
 `;
 const Plate = styled.div`
   width: 490px;

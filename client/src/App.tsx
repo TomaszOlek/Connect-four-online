@@ -9,7 +9,7 @@ import Board from "./components/Board";
 
 function App({ socket }: { socket: Socket }) {
   const [room, setRoom] = useState();
-  console.log(room);
+  console.log(socket);
 
   const handelEndGame = () => {
     socket.emit("endGame", room);
@@ -20,9 +20,14 @@ function App({ socket }: { socket: Socket }) {
       setRoom(roomData);
     });
 
-    socket.on("roomJoined", (roomName) => {
-      setRoom(roomName);
+    socket.on("roomJoined", (roomData) => {
+      setRoom(roomData);
     });
+
+    return () => {
+      socket.off("roomCreated");
+      socket.off("roomJoined");
+    };
   }, [socket]);
 
   return (
@@ -32,12 +37,6 @@ function App({ socket }: { socket: Socket }) {
       ) : (
         <Board room={room} socket={socket} />
       )}
-      {/* <button onClick={handelJoinRoom}>Join Room</button>
-      <h1>Current Room: {room?.name}</h1>
-      {room?.players?.map((item) => (
-        <p>{item}</p>
-      ))}
-      <button onClick={handelEndGame}>End Game</button> */}
     </Conteiner>
   );
 }
