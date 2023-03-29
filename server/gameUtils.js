@@ -5,7 +5,7 @@ export const generateNewBoard = () => [
   [null, null, null, null, null, null],
   [null, null, null, null, null, null],
   [null, null, null, null, null, null],
-  [null, null, null, null, null, null],
+  [null, null, null, null, 2, 1],
 ]
 
 export const deepCloneBoard = (board) => [
@@ -19,7 +19,13 @@ export const deepCloneBoard = (board) => [
   [...board[7]],
 ]
 
-// for real tho...all credit for this super optimized logic belongs here: Jeff Leu circa November 23, 2016
+export const handelChipDrop = (board, currentRoom, selectedRow, index) => {
+  let lastIndex = selectedRow.lastIndexOf(null);
+  selectedRow.splice(lastIndex, 1, currentRoom.game.playerTurn.playerIndex);
+  board[index] = selectedRow
+  return board
+}
+
 const checkVertical = (board) => {
   // Check only if row is 3 or greater
   // for (let r = 3; r < 6; r++) {

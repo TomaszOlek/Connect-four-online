@@ -9,18 +9,22 @@ import Board from "./components/Board";
 
 function App({ socket }: { socket: Socket }) {
   const [room, setRoom] = useState();
-  console.log(socket);
+  console.log("room", room);
 
   const handelEndGame = () => {
     socket.emit("endGame", room);
   };
 
   useEffect(() => {
-    socket.on("roomCreated", (roomData) => {
-      setRoom(roomData);
-    });
+    //   socket.on("roomCreated", (roomData) => {
+    //     setRoom(roomData);
+    //   });
 
-    socket.on("roomJoined", (roomData) => {
+    //   socket.on("roomJoined", (roomData) => {
+    //     setRoom(roomData);
+    //   });
+
+    socket.on("updateRoom", (roomData) => {
       setRoom(roomData);
     });
 
@@ -37,6 +41,7 @@ function App({ socket }: { socket: Socket }) {
       ) : (
         <Board room={room} socket={socket} />
       )}
+      <Version>Version: {import.meta.env.VITE_APP_VERSION}</Version>
     </Conteiner>
   );
 }
@@ -47,4 +52,13 @@ const Conteiner = styled.div`
   width: 100%;
   height: 100%;
   background-color: #7a45ff;
+`;
+
+const Version = styled.p`
+  position: absolute;
+  right: 5px;
+  bottom: 2px;
+
+  color: white;
+  font-size: 12px;
 `;

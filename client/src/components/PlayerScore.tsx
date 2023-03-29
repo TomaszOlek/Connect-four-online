@@ -4,11 +4,26 @@ import { Socket } from "socket.io-client";
 import playerOne from "../assets/player-one.svg";
 import playerTwo from "../assets/player-two.svg";
 
-function PlayerScore({ player }: { player: string }) {
+interface MainMenuProps {
+  socket: Socket;
+  playerIndex: 0 | 1;
+  players: {
+    playerId: String;
+    playerName: String;
+  }[];
+}
+
+function PlayerScore({ socket, players, playerIndex }: MainMenuProps) {
   return (
     <Conteiner>
-      <PlayerImage src={player === "playerOne" ? playerOne : playerTwo} />
-      <PlayerName>{player}</PlayerName>
+      <PlayerImage src={playerIndex === 0 ? playerOne : playerTwo} />
+      <PlayerName>
+        {players[playerIndex]
+          ? players[playerIndex].playerId === socket.id
+            ? "You"
+            : players[playerIndex].playerName
+          : `Player${playerIndex}`}
+      </PlayerName>
     </Conteiner>
   );
 }
@@ -35,6 +50,7 @@ const PlayerImage = styled.img`
   position: absolute;
   transform: scale(0.8);
   top: -25px;
+  user-select: none;
 `;
 const PlayerName = styled.p`
   font-size: 16px;
