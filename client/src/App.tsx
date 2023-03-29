@@ -16,14 +16,6 @@ function App({ socket }: { socket: Socket }) {
   };
 
   useEffect(() => {
-    //   socket.on("roomCreated", (roomData) => {
-    //     setRoom(roomData);
-    //   });
-
-    //   socket.on("roomJoined", (roomData) => {
-    //     setRoom(roomData);
-    //   });
-
     socket.on("updateRoom", (roomData) => {
       setRoom(roomData);
     });

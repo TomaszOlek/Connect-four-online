@@ -41,6 +41,7 @@ const Conteiner = styled.div`
 
   position: relative;
 
+  box-shadow: 1px 5px 1px;
   background-color: white;
   border: 3px solid black;
   border-radius: 25px;

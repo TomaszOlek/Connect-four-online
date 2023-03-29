@@ -16,7 +16,6 @@ function MainMenu({ socket }: { socket: Socket }) {
   return (
     <Conteiner>
       <Logo />
-
       {/* <Button backgroundColor="#FC6787">
         Play VS Bot <Icon icon="mdi:robot-happy-outline" />
       </Button> */}
