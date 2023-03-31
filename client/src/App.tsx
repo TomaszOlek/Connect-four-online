@@ -9,11 +9,13 @@ import Board from "./components/Board";
 
 function App({ socket }: { socket: Socket }) {
   const [room, setRoom] = useState();
-  console.log("room", room);
-
   const handelEndGame = () => {
     socket.emit("endGame", room);
   };
+
+  if (room) {
+    console.log(room);
+  }
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
@@ -21,8 +23,7 @@ function App({ socket }: { socket: Socket }) {
     });
 
     return () => {
-      socket.off("roomCreated");
-      socket.off("roomJoined");
+      socket.off("updateRoom");
     };
   }, [socket]);
 

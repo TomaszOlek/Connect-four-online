@@ -8,6 +8,10 @@ import { generateNewBoard } from "./gameUtils.js"
 import { handelChipDrop } from "./gameUtils.js"
 import { checkForWin } from "./gameUtils.js"
 
+// in Seconds
+const PLAYER_OVERTIME = 20
+const PLAYER_OVERALL_TIME = 15
+
 const app = express()
 app.use(cors())
 
@@ -21,11 +25,15 @@ const io = new Server(server, {
 
 const rooms = [];
 
-io.on("connection", (socket) => {
+io.on("connection", ( socket ) => {
   let currentRoom = null;
   const socketPlayerId = socket.id
 
-  const isUserInLobby = () =>{
+  const updateRoomAndEmit = ( room ) => {
+    io.in(room.lobby).emit("updateRoom", room);
+  };
+
+  const isUserInLobby = () => {
     for (let i=0; i<rooms.length; i++ ){
       if (rooms[i].players.includes(socketPlayerId)){
         return(rooms[i])
@@ -33,6 +41,19 @@ io.on("connection", (socket) => {
     }
     return false
   }
+
+  const startTimer = (room) => {
+    console.log(room)
+    setInterval(function(){ 
+      if(room.game.playerTurn.remainingTime !== 0){
+        room.game.playerTurn.remainingTime--
+      } else{
+        room.players[room.game.playerTurn.playerIndex-1].overtimeTime--
+      } 
+      updateRoomAndEmit(room)
+    }, 1000);
+  }
+
 
   const joinOrCreateRoom = () => {
     if (isUserInLobby()){
@@ -43,21 +64,22 @@ io.on("connection", (socket) => {
       if (rooms[i].players.length === 1) {
         currentRoom = rooms[i].lobby;
 
-        rooms[i].players = [  ...rooms[i].players,
-          {
-            playerId: socket.id,
-            playerName: `Player${rooms[i].players.length+1}`,
-          }
-        ];
+        const newPlayer = {
+          playerId: socketPlayerId,
+          playerName: `Player${rooms[i].players.length + 1}`,
+          overtimeTime: PLAYER_OVERTIME,
+        };
+        rooms[i].players.push(newPlayer)
+
         rooms[i].game.state = "gameStarted";
         rooms[i].game.playerTurn = {
           ...rooms[i].players[0],
           playerIndex: 1,
+          remainingTime: "FirstMove",
         };
 
         socket.join(currentRoom);
-        socket.broadcast.emit("updateRoom", rooms[i]);
-        socket.emit("updateRoom", rooms[i]);
+        updateRoomAndEmit(rooms[i]);
 
         console.log(`Player: ${socketPlayerId}, Joined Room: ${currentRoom}`)
         return;
@@ -65,6 +87,13 @@ io.on("connection", (socket) => {
     }
 
     currentRoom = uuidv4();
+    socket.join(currentRoom);
+
+    const newPlayer = {
+      playerId: socketPlayerId,
+      playerName: `Player1`,
+      overtimeTime : PLAYER_OVERTIME,
+    };
     rooms.push({
       lobby: currentRoom,
       game: {
@@ -73,21 +102,16 @@ io.on("connection", (socket) => {
         playerTurn: {
           playerId: "",
           playerName: "",
-          playerIndex: 1,
         },
       },
-      players: [
-        {
-          playerId: socketPlayerId,
-          playerName: "Player1",
-        }
-      ]
+      players: [newPlayer]
     });
 
-    const index = rooms.findIndex((room) => room.lobby === currentRoom);
 
+    const index = rooms.findIndex((room) => room.lobby === currentRoom);
+    
     console.log(`Player: ${socketPlayerId}, Created Room: ${currentRoom}`)
-    socket.emit("updateRoom", rooms[index])
+    io.in(currentRoom).emit("updateRoom", rooms[index]);
   };
 
 
@@ -98,37 +122,36 @@ io.on("connection", (socket) => {
 
   socket.on("playerMove", (playerMoveData) => {
     const roomIndex = rooms.findIndex((room) => room.lobby === playerMoveData.playerLobby);
-    const currentRoom = rooms[roomIndex]
-    let board = currentRoom.game.board
+    const room = rooms[roomIndex]
+    let board = room.game.board
     //isMoveValid
     const selectedRow = board[playerMoveData.rowSelected]
     if(!selectedRow.includes(null)){
       return; 
     }
     console.log(`Player: ${playerMoveData.playerId} Selected: ${playerMoveData.rowSelected} row`)
+    board = handelChipDrop(board, room, selectedRow, playerMoveData.rowSelected)
 
-    board = handelChipDrop(board, currentRoom, selectedRow, playerMoveData.rowSelected)
 
     checkForWin(board)
 
-    currentRoom.game.board = board
+    room.game.board = board
     // if (win){
 
     // }else{
-
-      currentRoom.game.playerTurn = currentRoom.game.playerTurn.playerIndex === 1 ?
+      room.game.playerTurn = room.game.playerTurn.playerIndex === 1 ?
       {
-        ...currentRoom.players[1],
+        ...room.players[1],
         playerIndex: 2
       } : {
-        ...currentRoom.players[0],
+        ...room.players[0],
         playerIndex: 1
       }
+      room.game.playerTurn.remainingTime = PLAYER_OVERALL_TIME
+      startTimer(room);
     // }
- 
 
-    socket.broadcast.emit("updateRoom", currentRoom);
-    socket.emit("updateRoom", currentRoom);
+    updateRoomAndEmit(room);
   });
 
 

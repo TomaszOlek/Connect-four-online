@@ -1,14 +1,13 @@
 import styled from "styled-components";
 
-function GameInformationContainer({ gameInfo }: { gameInfo: string }) {
-  console.log(gameInfo);
+function GameInformationContainer({ room }: { room: any }) {
   return (
     <WinConteiner
       playerTurn={
-        gameInfo.state === "gameStarted" ? gameInfo.playerTurn.playerName : ""
+        room.game.state === "gameStarted" ? room.game.playerTurn.playerName : ""
       }
     >
-      {gameInfo.state === "gameEnded" ? (
+      {room.game.state === "gameEnded" ? (
         <>
           <p>Player 1</p>
           <h3>Wins</h3>
@@ -16,8 +15,18 @@ function GameInformationContainer({ gameInfo }: { gameInfo: string }) {
         </>
       ) : (
         <>
-          <PlayerNameTurn>{`${gameInfo.playerTurn.playerName}'s TURN`}</PlayerNameTurn>
-          <h3>4s</h3>
+          <PlayerNameTurn>{`${room.game.playerTurn.playerName}'s TURN`}</PlayerNameTurn>
+          {room.game.playerTurn.remainingTime === "FirstMove" ? (
+            <p>Waiting For First Move!</p>
+          ) : room.game.playerTurn.remainingTime !== 0 ? (
+            <h3>{room.game.playerTurn.remainingTime}S</h3>
+          ) : (
+            <h2>{`
+              Overtime ${
+                room.players[room.game.playerTurn.playerIndex - 1].overtimeTime
+              }S
+            `}</h2>
+          )}
         </>
       )}
     </WinConteiner>

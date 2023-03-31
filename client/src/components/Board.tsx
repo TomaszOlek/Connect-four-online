@@ -6,12 +6,7 @@ import WaitingForPlayer from "./WaitingForPlayer";
 import PlateRow from "./PlateRow";
 import GameInforamtionContainer from "./GameInforamtionContainer";
 
-import yellowMarker from "../assets/marker-yellow.svg";
-import redMarker from "../assets/marker-red.svg";
-import test from "../assets/test.svg";
-
 function Board({ socket, room }: { socket: Socket; room: any }) {
-  console.log(room.game.state);
   return (
     <Conteiner>
       <LobbyTitle>Lobby: {room.lobby}</LobbyTitle>
@@ -29,7 +24,7 @@ function Board({ socket, room }: { socket: Socket; room: any }) {
         ))}
         {(room.game.state === "gameStarted" ||
           room.game.state === "gameEnded") && (
-          <GameInforamtionContainer gameInfo={room.game} />
+          <GameInforamtionContainer room={room} />
         )}
       </Plate>
       <PlayerScore socket={socket} players={room.players} playerIndex={1} />
