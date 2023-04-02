@@ -157,10 +157,12 @@ io.on("connection", ( socket ) => {
 
     if (winerPlayer){
       endGame(room, winerPlayer)
+      console.log(winerPlayer)
       if (winerPlayer === 1){
-        room.game.score.playerOneWins++
+        ++room.game.score.playerOneWins
+      }else{
+        ++room.game.score.playerTwoWins
       }
-      room.game.score.playerTwoWins++
     }else{
       room.game.playerTurn = room.game.playerTurn.playerIndex === 1 ?
       {

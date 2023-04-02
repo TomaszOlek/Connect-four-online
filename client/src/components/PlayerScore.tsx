@@ -37,7 +37,12 @@ function PlayerScore({ socket, playerIndex }: MainMenuProps) {
             : 20}
         </span>
       </PlayerOvertime>
-      <PlayerWins>Wins: {room.game.score.playerOneWins}</PlayerWins>
+      <PlayerWins>
+        Wins:{" "}
+        {playerIndex === 0
+          ? room.game.score.playerOneWins
+          : room.game.score.playerTwoWins}
+      </PlayerWins>
     </Conteiner>
   );
 }

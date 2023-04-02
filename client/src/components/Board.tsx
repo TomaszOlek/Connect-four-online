@@ -30,7 +30,7 @@ function Board({ socket }: { socket: Socket }) {
       <PlayerScore socket={socket} playerIndex={1} />
       {room.game.state === "lookingForPlayers" && <WaitingForPlayer />}
       <BackgroundDecoration
-        playerWon={room.game.state === "gameEnded" && room.game.score.lastWind}
+        playerWon={room.game.state === "gameEnded" && room.game.score.lastWin}
       />
     </Conteiner>
   );

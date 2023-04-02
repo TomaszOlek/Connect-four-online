@@ -22,7 +22,7 @@ export type roomType = {
       remainingTime: number | "FirstMove";
     };
     score: {
-      lastWind: null | 1 | 2;
+      lastWin: null | 1 | 2;
       playerOneWins: number;
       playerTwoWins: number;
     };
@@ -43,7 +43,7 @@ const initialState: roomType = {
       remainingTime: 0,
     },
     score: {
-      lastWind: null,
+      lastWin: null,
       playerOneWins: 0,
       playerTwoWins: 0,
     },

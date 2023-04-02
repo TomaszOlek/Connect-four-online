@@ -13,8 +13,8 @@ import { updateRoomData } from "./actions";
 
 function App({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
-
   const room = useSelector((state: RootState) => state.roomData);
+  console.log(room);
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
