@@ -31,8 +31,29 @@ export type roomType = {
   timeRunning: boolean;
 };
 
+const initialState: roomType = {
+  lobby: "",
+  game: {
+    state: "",
+    board: [],
+    playerTurn: {
+      playerId: "",
+      playerName: "",
+      playerIndex: 1,
+      remainingTime: 0,
+    },
+    score: {
+      lastWind: null,
+      playerOneWins: 0,
+      playerTwoWins: 0,
+    },
+  },
+  players: [],
+  timeRunning: false,
+};
 
-function roomData(state: roomType, action: roomDataAction) {
+
+function roomData(state: roomType = initialState, action: roomDataAction) {
   switch (action.type) {
     case "roomData/updateRoomData":
       return {

@@ -28,7 +28,7 @@ function App({ socket }: { socket: Socket }) {
 
   return (
     <Conteiner>
-      {Object.keys(room).length === 0 ? (
+      {room.lobby === "" ? (
         <MainMenu socket={socket} />
       ) : (
         <Board socket={socket} />
