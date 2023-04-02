@@ -3,8 +3,10 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { io } from "socket.io-client";
 import { createGlobalStyle } from "styled-components";
-// import dotenv from "dotenv";
-// dotenv.config();
+
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "./reducers/index";
+import { Provider } from "react-redux";
 
 const GlobalStyle = createGlobalStyle`
   body,html,#root {
@@ -20,10 +22,13 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const socket = io("http://localhost:3001");
+let store = configureStore({ reducer: rootReducer });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <GlobalStyle />
-    <App socket={socket} />
+    <Provider store={store}>
+      <App socket={socket} />
+    </Provider>
   </React.StrictMode>
 );

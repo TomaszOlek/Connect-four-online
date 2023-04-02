@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Icon } from "@iconify/react";
 
 function Logo() {
   return (
@@ -85,5 +84,3 @@ const YelloChip = styled.div`
     border: 1px solid #b7851a;
   }
 `;
-
-// inset 1px 1px 1px #bb0e33, inset -1px -1px 1px #bc0f35

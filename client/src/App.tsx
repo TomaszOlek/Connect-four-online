@@ -1,25 +1,24 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { Socket } from "socket.io-client";
 
 import MainMenu from "./components/MainMenu";
 import Board from "./components/Board";
+
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "./reducers";
+import { updateRoomData } from "./actions";
 // connect-four.io
 
 function App({ socket }: { socket: Socket }) {
-  const [room, setRoom] = useState();
-  const handelEndGame = () => {
-    socket.emit("endGame", room);
-  };
+  const dispatch = useDispatch();
 
-  if (room) {
-    console.log(room);
-  }
+  const room = useSelector((state: RootState) => state.roomData);
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
-      setRoom(roomData);
+      dispatch(updateRoomData(roomData));
     });
 
     return () => {
@@ -29,10 +28,10 @@ function App({ socket }: { socket: Socket }) {
 
   return (
     <Conteiner>
-      {!room ? (
+      {Object.keys(room).length === 0 ? (
         <MainMenu socket={socket} />
       ) : (
-        <Board room={room} socket={socket} />
+        <Board socket={socket} />
       )}
       <Version>Version: {import.meta.env.VITE_APP_VERSION}</Version>
     </Conteiner>

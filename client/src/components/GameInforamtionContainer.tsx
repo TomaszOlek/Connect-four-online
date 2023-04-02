@@ -1,18 +1,30 @@
 import styled from "styled-components";
 
-function GameInformationContainer({ room }: { room: any }) {
+import { useSelector } from "react-redux";
+import { RootState } from "../reducers";
+
+type WinConteinerType = {
+  gameState: {
+    state: string;
+    player: 1 | 2;
+  };
+};
+
+function GameInformationContainer() {
+  const room = useSelector((state: RootState) => state.roomData);
   return (
     <WinConteiner
-      playerTurn={
-        room.game.state === "gameStarted" ? room.game.playerTurn.playerName : ""
-      }
+      gameState={{
+        state: room.game.state,
+        player: room.game.playerTurn.playerIndex,
+      }}
     >
       {room.game.state === "gameEnded" ? (
-        <>
-          <p>Player 1</p>
+        <div>
+          <p>{room.players[room.game.score.lastWin - 1].playerName}</p>
           <h3>Wins</h3>
           <button>Play again</button>
-        </>
+        </div>
       ) : (
         <>
           <PlayerNameTurn>{`${room.game.playerTurn.playerName}'s TURN`}</PlayerNameTurn>
@@ -40,8 +52,7 @@ const PlayerNameTurn = styled.p`
   font-size: 12px;
   text-transform: uppercase;
 `;
-
-const WinConteiner = styled.div`
+const WinConteiner = styled.div<WinConteinerType>`
   width: 180px;
   height: 130px;
 
@@ -60,13 +71,17 @@ const WinConteiner = styled.div`
   bottom: 30px;
 
   ${(props) =>
-    props.playerTurn === "Player1"
+    props.gameState.state === "gameEnded"
       ? `
-    background-color: #eb607e;
+      background-color: #fff;
     `
+      : props.gameState.player === 1
+      ? `
+        background-color: #eb607e;
+      `
       : `
-    background-color: #ffcf68;
-  `}
+        background-color: #ffcf68;
+      `}
 
   & p {
     text-align: center;

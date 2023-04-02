@@ -7,36 +7,49 @@ import playerTwo from "../assets/player-two.svg";
 interface MainMenuProps {
   socket: Socket;
   playerIndex: 0 | 1;
-  players: {
-    playerId: String;
-    playerName: String;
-  }[];
 }
 
-function PlayerScore({ socket, players, playerIndex }: MainMenuProps) {
+import { useSelector } from "react-redux";
+import { RootState } from "../reducers";
+
+function PlayerScore({ socket, playerIndex }: MainMenuProps) {
+  const room = useSelector((state: RootState) => state.roomData);
   return (
     <Conteiner>
       <PlayerImage src={playerIndex === 0 ? playerOne : playerTwo} />
       <PlayerName>
-        {players[playerIndex]
-          ? players[playerIndex].playerId === socket.id
+        {room.players[playerIndex]
+          ? room.players[playerIndex].playerId === socket.id
             ? "You"
-            : players[playerIndex].playerName
+            : room.players[playerIndex].playerName
           : `Player${playerIndex}`}
       </PlayerName>
+      <PlayerOvertime>
+        Extra time:{" "}
+        <span
+          style={
+            room.players[playerIndex] &&
+            (room.players[playerIndex].overtimeTime < 5 ? { color: "red" } : {})
+          }
+        >
+          {room.players[playerIndex]
+            ? room.players[playerIndex].overtimeTime
+            : 20}
+        </span>
+      </PlayerOvertime>
+      <PlayerWins>Wins: {room.game.score.playerOneWins}</PlayerWins>
     </Conteiner>
   );
 }
-
 export default PlayerScore;
 
 const Conteiner = styled.div`
-  width: 100px;
-  height: 120px;
+  width: 150px;
+  height: 100px;
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 
   position: relative;
@@ -46,6 +59,15 @@ const Conteiner = styled.div`
   border: 3px solid black;
   border-radius: 25px;
   margin-bottom: 80px;
+  padding-bottom: 20px;
+`;
+const PlayerOvertime = styled.p`
+  font-size: 16px;
+  font-weight: 500;
+`;
+const PlayerWins = styled.p`
+  font-size: 24px;
+  font-weight: 500;
 `;
 const PlayerImage = styled.img`
   position: absolute;

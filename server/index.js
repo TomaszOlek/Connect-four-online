@@ -28,6 +28,7 @@ const rooms = [];
 io.on("connection", ( socket ) => {
   let currentRoom = null;
   const socketPlayerId = socket.id
+  var timer
 
   const updateRoomAndEmit = ( room ) => {
     io.in(room.lobby).emit("updateRoom", room);
@@ -42,13 +43,25 @@ io.on("connection", ( socket ) => {
     return false
   }
 
+  const endGame = (room, winner) => {
+    clearInterval(timer);
+    room.game.state = "gameEnded"
+    room.game.score.lastWin = winner
+  }
+
   const startTimer = (room) => {
-    console.log(room)
-    setInterval(function(){ 
+    if (room.timerRunning) {
+      return;
+    }
+    room.timerRunning = true;
+    timer = setInterval(function(){ 
       if(room.game.playerTurn.remainingTime !== 0){
         room.game.playerTurn.remainingTime--
       } else{
         room.players[room.game.playerTurn.playerIndex-1].overtimeTime--
+        if (room.players[room.game.playerTurn.playerIndex-1].overtimeTime === 0){
+          endGame(room, room.game.playerTurn.playerIndex === 1 ? 2 : 1)
+        }
       } 
       updateRoomAndEmit(room)
     }, 1000);
@@ -103,8 +116,14 @@ io.on("connection", ( socket ) => {
           playerId: "",
           playerName: "",
         },
+        score: {
+          lastWin: null,
+          playerOneWins: 0,
+          playerTwoWins: 0,
+        }
       },
-      players: [newPlayer]
+      players: [newPlayer],
+      timerRunning: false,
     });
 
 
@@ -126,19 +145,23 @@ io.on("connection", ( socket ) => {
     let board = room.game.board
     //isMoveValid
     const selectedRow = board[playerMoveData.rowSelected]
-    if(!selectedRow.includes(null)){
+    if(!selectedRow.includes(null) || room.game.state !== "gameStarted"){
       return; 
     }
+
     console.log(`Player: ${playerMoveData.playerId} Selected: ${playerMoveData.rowSelected} row`)
     board = handelChipDrop(board, room, selectedRow, playerMoveData.rowSelected)
-
-
-    checkForWin(board)
-
     room.game.board = board
-    // if (win){
 
-    // }else{
+    const winerPlayer = checkForWin(board)
+
+    if (winerPlayer){
+      endGame(room, winerPlayer)
+      if (winerPlayer === 1){
+        room.game.score.playerOneWins++
+      }
+      room.game.score.playerTwoWins++
+    }else{
       room.game.playerTurn = room.game.playerTurn.playerIndex === 1 ?
       {
         ...room.players[1],
@@ -148,8 +171,9 @@ io.on("connection", ( socket ) => {
         playerIndex: 1
       }
       room.game.playerTurn.remainingTime = PLAYER_OVERALL_TIME
+
       startTimer(room);
-    // }
+    }
 
     updateRoomAndEmit(room);
   });

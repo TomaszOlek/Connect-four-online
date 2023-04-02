@@ -5,7 +5,7 @@ import { Socket } from "socket.io-client";
 import Logo from "./Logo";
 
 interface ButtonProps {
-  backgroundColor?: string;
+  backgroundColor: string;
 }
 
 function MainMenu({ socket }: { socket: Socket }) {

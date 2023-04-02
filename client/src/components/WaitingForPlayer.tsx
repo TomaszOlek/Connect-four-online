@@ -43,6 +43,7 @@ const Conteiner = styled.div`
   justify-content: center;
   align-items: center;
   gap: 8px;
+  z-index: 2;
 `;
 
 const ConteinerBackground = styled.div`
@@ -59,6 +60,7 @@ const ConteinerBackground = styled.div`
   align-items: center;
 
   background-color: #3632325e;
+  z-index: 2;
 `;
 
 const LeaveButton = styled.button`

@@ -6,29 +6,32 @@ import WaitingForPlayer from "./WaitingForPlayer";
 import PlateRow from "./PlateRow";
 import GameInforamtionContainer from "./GameInforamtionContainer";
 
-function Board({ socket, room }: { socket: Socket; room: any }) {
+import { useSelector } from "react-redux";
+import { RootState } from "../reducers";
+
+interface BackgroundDecorationProps {
+  playerWon: 1 | 2 | null | false;
+}
+
+function Board({ socket }: { socket: Socket }) {
+  const room = useSelector((state: RootState) => state.roomData);
   return (
     <Conteiner>
       <LobbyTitle>Lobby: {room.lobby}</LobbyTitle>
 
-      <PlayerScore socket={socket} players={room.players} playerIndex={0} />
+      <PlayerScore socket={socket} playerIndex={0} />
       <Plate>
         {room.game.board.map((row, index) => (
-          <PlateRow
-            key={index}
-            room={room}
-            socket={socket}
-            index={index}
-            row={row}
-          />
+          <PlateRow key={index} socket={socket} index={index} row={row} />
         ))}
         {(room.game.state === "gameStarted" ||
-          room.game.state === "gameEnded") && (
-          <GameInforamtionContainer room={room} />
-        )}
+          room.game.state === "gameEnded") && <GameInforamtionContainer />}
       </Plate>
-      <PlayerScore socket={socket} players={room.players} playerIndex={1} />
+      <PlayerScore socket={socket} playerIndex={1} />
       {room.game.state === "lookingForPlayers" && <WaitingForPlayer />}
+      <BackgroundDecoration
+        playerWon={room.game.state === "gameEnded" && room.game.score.lastWind}
+      />
     </Conteiner>
   );
 }
@@ -42,8 +45,32 @@ const Conteiner = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   gap: 35px;
+  isolation: isolate;
+`;
+const BackgroundDecoration = styled.p<BackgroundDecorationProps>`
+  content: "";
+  width: 100vw;
+  height: 80px;
+
+  position: absolute;
+  bottom: 0px;
+
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+
+  background: #5c2dd5;
+  ${(props) =>
+    (props.playerWon === 1 &&
+      `
+      background-color: #eb607e;
+    `) ||
+    (props.playerWon === 2 &&
+      `
+      background-color: #eb607e;
+    `)}
+
+  z-index: 0;
 `;
 const Plate = styled.div`
   width: 490px;
@@ -61,6 +88,8 @@ const Plate = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
+
+  z-index: 1;
 `;
 const LobbyTitle = styled.p`
   position: absolute;
@@ -69,4 +98,5 @@ const LobbyTitle = styled.p`
 
   color: white;
   font-size: 12px;
+  z-index: 1;
 `;

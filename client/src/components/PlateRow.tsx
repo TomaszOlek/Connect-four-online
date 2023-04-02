@@ -5,18 +5,27 @@ import { Socket } from "socket.io-client";
 import yellowMarker from "../assets/marker-yellow.svg";
 import redMarker from "../assets/marker-red.svg";
 
+import { useSelector } from "react-redux";
+import { RootState } from "../reducers";
+
+type ChipType = {
+  variant: "red" | "yellow" | "empty";
+};
+type RowContainerType = {
+  isPlayerTurn: boolean;
+};
+
 function PlateRow({
-  room,
   socket,
   index,
   row,
 }: {
   socket: Socket;
-  room: any;
   index: number;
   row: any;
 }) {
   const [isPlayerTurn, setIsPlayerTurn] = useState(false);
+  const room = useSelector((state: RootState) => state.roomData);
   const playerIndex = room.players.findIndex(
     (player) => player.playerId === socket.id
   );
@@ -52,7 +61,7 @@ function PlateRow({
             : yellowMarker
         }
       />
-      {row.map((rowChip) => {
+      {row.map((rowChip: 1 | 2 | null) => {
         switch (rowChip) {
           case 1:
             return <Chip variant="red" />;
@@ -66,7 +75,7 @@ function PlateRow({
   );
 }
 
-const Chip = styled.div`
+const Chip = styled.div<ChipType>`
   width: 50px;
   height: 50px;
 
@@ -100,7 +109,7 @@ const RowPointer = styled.img`
   transform: scale(0.57);
   user-select: none;
 `;
-const RowContainer = styled.div`
+const RowContainer = styled.div<RowContainerType>`
   position: relative;
   display: flex;
   flex-direction: column;
