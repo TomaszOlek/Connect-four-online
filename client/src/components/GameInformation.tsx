@@ -19,7 +19,7 @@ function GameInformation({ socket }: { socket: Socket }) {
   }
 
   return (
-    <WinConteiner
+    <WinContainer
       gameState={{
         state: room.game.state,
         player: room.game.playerTurn.playerIndex,
@@ -63,7 +63,7 @@ function GameInformation({ socket }: { socket: Socket }) {
           )}
         </>
       )}
-    </WinConteiner>
+    </WinContainer>
   );
 }
 
@@ -74,7 +74,7 @@ const PlayerNameTurn = styled.p`
   font-size: 12px;
   text-transform: uppercase;
 `;
-const WinConteiner = styled.div<WinConteinerType>`
+const WinContainer = styled.div<WinConteinerType>`
   width: 180px;
   height: 130px;
 

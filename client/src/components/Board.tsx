@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 
 interface BackgroundDecorationProps {
-  playerWon: 1 | 2 | null | false;
+  playerWon: 1 | 2 | null | "draw" | false;
 }
 
 function Board({ socket }: { socket: Socket }) {
