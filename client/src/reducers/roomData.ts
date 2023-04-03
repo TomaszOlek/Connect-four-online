@@ -22,7 +22,7 @@ export type roomType = {
       remainingTime: number | "FirstMove";
     };
     score: {
-      lastWin: null | 1 | 2;
+      lastWin: null | 1 | 2 | "draw";
       playerOneWins: number;
       playerTwoWins: number;
     };

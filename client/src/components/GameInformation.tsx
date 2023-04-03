@@ -27,12 +27,25 @@ function GameInformation({ socket }: { socket: Socket }) {
     >
       {room.game.state === "gameEnded" && room.game.score.lastWin ? (
         <div>
-          <p>{room.players[room.game.score.lastWin - 1].playerName}</p>
-          <h3>Wins</h3>
-          <button onClick={() => handelStartNewGame()}>
-            Play again{" "}
-            {room.startNewGameVotes ? room.startNewGameVotes.votes : 0}/2
-          </button>
+          {room.game.score.lastWin === "draw" ? (
+            <>
+              <h3>Draw</h3>
+              <button onClick={() => handelStartNewGame()}>
+                Play again{" "}
+                {room.startNewGameVotes ? room.startNewGameVotes.votes : 0}/2
+              </button>
+            </>
+          ) : (
+            <>
+              {" "}
+              <p>{room.players[room.game.score.lastWin - 1].playerName}</p>
+              <h3>Wins</h3>
+              <button onClick={() => handelStartNewGame()}>
+                Play again{" "}
+                {room.startNewGameVotes ? room.startNewGameVotes.votes : 0}/2
+              </button>
+            </>
+          )}
         </div>
       ) : (
         <>

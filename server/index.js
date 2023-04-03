@@ -35,7 +35,7 @@ function isEven(value){
 io.on("connection", ( socket ) => {
   let currentRoom = null;
   const socketPlayerId = socket.id
-  var timer
+  let timer
 
   const updateRoomAndEmit = ( room ) => {
     io.in(room.lobby).emit("updateRoom", room);
@@ -161,16 +161,8 @@ io.on("connection", ( socket ) => {
     room.game.board = board
 
     const winerPlayer = checkForWin(board)
-
-    if (winerPlayer){
-      endGame(room, winerPlayer)
-      console.log(winerPlayer)
-      if (winerPlayer === 1){
-        ++room.game.score.playerOneWins
-      }else{
-        ++room.game.score.playerTwoWins
-      }
-    }else{
+    console.log(winerPlayer)
+    if (!winerPlayer){
       room.game.playerTurn = room.game.playerTurn.playerIndex === 1 ?
       {
         ...room.players[1],
@@ -182,7 +174,19 @@ io.on("connection", ( socket ) => {
       room.game.playerTurn.remainingTime = PLAYER_OVERALL_TIME
 
       startTimer(room);
+    }else if (winerPlayer === "draw"){
+      endGame(room, "draw")
+      ++room.game.score.playerOneWins
+      ++room.game.score.playerTwoWins
     }
+    // else{
+    //   endGame(room, winerPlayer)
+    //   if (winerPlayer === 1){
+    //     ++room.game.score.playerOneWins
+    //   }else{
+    //     ++room.game.score.playerTwoWins
+    //   }
+    // }
 
     updateRoomAndEmit(room);
   });
