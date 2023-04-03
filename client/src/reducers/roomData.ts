@@ -29,6 +29,10 @@ export type roomType = {
   };
   players: Array<PlayerType>;
   timeRunning: boolean;
+  startNewGameVotes?: {
+    votes: number;
+    playersVoted: Array<string>
+  }
 };
 
 const initialState: roomType = {

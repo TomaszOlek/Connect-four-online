@@ -25,6 +25,13 @@ const io = new Server(server, {
 
 const rooms = [];
 
+function isEven(value){
+  if (value%2 == 0)
+      return true;
+  else
+      return false;
+}
+
 io.on("connection", ( socket ) => {
   let currentRoom = null;
   const socketPlayerId = socket.id
@@ -180,6 +187,46 @@ io.on("connection", ( socket ) => {
     updateRoomAndEmit(room);
   });
 
+
+  socket.on("ResetGame", (lobby) => {
+    const roomIndex = rooms.findIndex((room) => room.lobby === lobby);
+    const room = rooms[roomIndex]
+    console.log(`Player ${socket.id} Voted to start new game.`)
+    if(!room.startNewGameVotes){
+      room.startNewGameVotes = {
+        votes: 1,
+        playersVoted: [socket.id]
+      }
+      updateRoomAndEmit(room)
+    }
+    if(room.startNewGameVotes.playersVoted.includes(socket.id)){
+      return
+    }
+    room.startNewGameVotes.votes++
+    room.startNewGameVotes.playersVoted.push(socket.id)
+    updateRoomAndEmit(room)
+
+    setTimeout(()=>{
+      const wasPlayerOneTourn = isEven(room.game.score.playerOneWins + room.game.score.playerTwoWins)
+
+      console.log(wasPlayerOneTourn)
+
+      room.game.playerTurn = {
+        ...room.players[wasPlayerOneTourn ? 0 : 1 ],
+        playerIndex: wasPlayerOneTourn ? 1 : 2,
+        remainingTime: "FirstMove",
+      };
+      room.players.map((player)=>{
+        player.overtimeTime = PLAYER_OVERTIME
+      })
+      room.timerRunning = false
+
+      room.game.board = generateNewBoard()
+      room.game.state = "gameStarted"
+      delete room.startNewGameVotes
+      updateRoomAndEmit(room)
+    }, 400);  
+  });
 
   socket.on("disconnect", () => {
     if (!currentRoom) {

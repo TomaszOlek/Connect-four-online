@@ -50,7 +50,7 @@ function PlateRow({
 
   return (
     <RowContainer
-      isPlayerTurn={isPlayerTurn}
+      isPlayerTurn={room.game.state === "gameStarted" && isPlayerTurn}
       onClick={() => handelRowClick(index)}
     >
       <RowPointer

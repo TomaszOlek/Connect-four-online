@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Socket } from "socket.io-client";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
@@ -10,8 +11,13 @@ type WinConteinerType = {
   };
 };
 
-function GameInformationContainer() {
+function GameInformation({ socket }: { socket: Socket }) {
   const room = useSelector((state: RootState) => state.roomData);
+
+  function handelStartNewGame() {
+    socket.emit("ResetGame", room.lobby);
+  }
+
   return (
     <WinConteiner
       gameState={{
@@ -19,11 +25,14 @@ function GameInformationContainer() {
         player: room.game.playerTurn.playerIndex,
       }}
     >
-      {room.game.state === "gameEnded" ? (
+      {room.game.state === "gameEnded" && room.game.score.lastWin ? (
         <div>
           <p>{room.players[room.game.score.lastWin - 1].playerName}</p>
           <h3>Wins</h3>
-          <button>Play again</button>
+          <button onClick={() => handelStartNewGame()}>
+            Play again{" "}
+            {room.startNewGameVotes ? room.startNewGameVotes.votes : 0}/2
+          </button>
         </div>
       ) : (
         <>
@@ -45,7 +54,7 @@ function GameInformationContainer() {
   );
 }
 
-export default GameInformationContainer;
+export default GameInformation;
 const PlayerNameTurn = styled.p`
   text-align: center;
   font-weight: 500;
@@ -109,6 +118,9 @@ const WinConteiner = styled.div<WinConteinerType>`
     &:hover {
       background-color: #693ec7;
       color: #d4d4d4;
+    }
+    &:active {
+      background-color: #5933ab;
     }
   }
 `;

@@ -22,7 +22,7 @@ function PlayerScore({ socket, playerIndex }: MainMenuProps) {
           ? room.players[playerIndex].playerId === socket.id
             ? "You"
             : room.players[playerIndex].playerName
-          : `Player${playerIndex}`}
+          : `Player${playerIndex + 1}`}
       </PlayerName>
       <PlayerOvertime>
         Extra time:{" "}
@@ -50,6 +50,7 @@ export default PlayerScore;
 
 const Conteiner = styled.div`
   width: 150px;
+  min-width: 125px;
   height: 100px;
 
   display: flex;

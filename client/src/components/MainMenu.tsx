@@ -4,13 +4,21 @@ import { Socket } from "socket.io-client";
 
 import Logo from "./Logo";
 
+import { useDispatch } from "react-redux";
+import { updateShowRules } from "../actions";
+
 interface ButtonProps {
   backgroundColor: string;
 }
 
 function MainMenu({ socket }: { socket: Socket }) {
+  const dispatch = useDispatch();
   const handelJoinRoom = () => {
     socket.emit("checkForFreeGameRoom");
+  };
+
+  const handelShowRules = () => {
+    dispatch(updateShowRules(true));
   };
 
   return (
@@ -22,7 +30,7 @@ function MainMenu({ socket }: { socket: Socket }) {
       <Button backgroundColor="#FBC02D" onClick={handelJoinRoom}>
         Play VS Player <Icon icon="mdi:emoticon-happy-outline" />
       </Button>
-      <Button backgroundColor="#FFFFFF">
+      <Button backgroundColor="#FFFFFF" onClick={handelShowRules}>
         Game Rules <Icon icon="material-symbols:info-outline-rounded" />
       </Button>
     </Conteiner>

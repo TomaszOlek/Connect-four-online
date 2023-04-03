@@ -1,10 +1,10 @@
-import "./App.css";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { Socket } from "socket.io-client";
 
 import MainMenu from "./components/MainMenu";
 import Board from "./components/Board";
+import Rules from "./components/Rules";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./reducers";
@@ -14,7 +14,7 @@ import { updateRoomData } from "./actions";
 function App({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
   const room = useSelector((state: RootState) => state.roomData);
-  console.log(room);
+  const isShowRules = useSelector((state: RootState) => state.showRules);
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
@@ -26,13 +26,16 @@ function App({ socket }: { socket: Socket }) {
     };
   }, [socket]);
 
+  console.log(isShowRules);
+
   return (
     <Conteiner>
-      {room.lobby === "" ? (
+      {room.lobby === "" || !room.lobby ? (
         <MainMenu socket={socket} />
       ) : (
         <Board socket={socket} />
       )}
+      {isShowRules && <Rules />}
       <Version>Version: {import.meta.env.VITE_APP_VERSION}</Version>
     </Conteiner>
   );

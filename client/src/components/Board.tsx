@@ -4,7 +4,7 @@ import { Socket } from "socket.io-client";
 import PlayerScore from "./PlayerScore";
 import WaitingForPlayer from "./WaitingForPlayer";
 import PlateRow from "./PlateRow";
-import GameInforamtionContainer from "./GameInforamtionContainer";
+import GameInformation from "./GameInformation";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
@@ -25,7 +25,9 @@ function Board({ socket }: { socket: Socket }) {
           <PlateRow key={index} socket={socket} index={index} row={row} />
         ))}
         {(room.game.state === "gameStarted" ||
-          room.game.state === "gameEnded") && <GameInforamtionContainer />}
+          room.game.state === "gameEnded") && (
+          <GameInformation socket={socket} />
+        )}
       </Plate>
       <PlayerScore socket={socket} playerIndex={1} />
       {room.game.state === "lookingForPlayers" && <WaitingForPlayer />}
