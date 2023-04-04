@@ -23,6 +23,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 `;
+// const PORT = process.env.PORT || 3001
 
 const socket = io("http://localhost:3001");
 let store = configureStore({ reducer: rootReducer });

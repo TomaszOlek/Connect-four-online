@@ -8,6 +8,9 @@ import { generateNewBoard } from "./gameUtils.js"
 import { handelChipDrop } from "./gameUtils.js"
 import { checkForWin } from "./gameUtils.js"
 
+
+const PORT = process.env.PORT || 3001
+
 // in Seconds
 const PLAYER_OVERTIME = 20
 const PLAYER_OVERALL_TIME = 15
@@ -251,6 +254,6 @@ io.on("connection", ( socket ) => {
   });
 });
 
-server.listen(3001, () => {
+server.listen(PORT, () => {
   console.log("server is running")
 })
