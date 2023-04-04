@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite && node index.js"
   },
   "dependencies": {
     "@iconify/react": "^4.1.0",
