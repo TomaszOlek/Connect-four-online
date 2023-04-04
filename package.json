@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "vite"
+    "start": "serve dist"
   },
   "dependencies": {
     "@iconify/react": "^4.1.0",
