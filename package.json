@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "startServer": "nodemon src/server/index.js",
-    "start": "concurrently \"yarn run dev\" \"yarn run startServer\"",
+    "start": "concurrently \"vite\" \"yarn run startServer\"",
     "delop": "git push heroku HEAD:main"
   },
   "dependencies": {
