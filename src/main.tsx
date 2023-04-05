@@ -25,9 +25,9 @@ const GlobalStyle = createGlobalStyle`
 `;
 const PORT = process.env.PORT || 3001;
 
-const socket = io(
-  "https://connect-four-online.herokuapp.com:" + process.env.PORT
-);
+const socket =
+  io();
+  // "https://connect-four-online.herokuapp.com:" + process.env.PORT
 let store = configureStore({ reducer: rootReducer });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
