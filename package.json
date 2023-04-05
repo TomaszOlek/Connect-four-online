@@ -7,9 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "startServer": "node src/server/index.js",
+    "startServer": "nodemon src/server/index.js",
     "start": "concurrently \"yarn run dev\" \"yarn run startServer\"",
-    "deply": "concurrently \"git push heroku HEAD:main\" \"yarn run start\""
+    "delop": "git push heroku HEAD:main"
   },
   "dependencies": {
     "@iconify/react": "^4.1.0",
