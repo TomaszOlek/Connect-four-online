@@ -13,11 +13,11 @@ interface ButtonProps {
 
 function MainMenu({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
-  const handelJoinRoom = () => {
+  const handleJoinRoom = () => {
     socket.emit("checkForFreeGameRoom");
   };
 
-  const handelShowRules = () => {
+  const handleShowRules = () => {
     dispatch(updateShowRules(true));
   };
 
@@ -27,10 +27,10 @@ function MainMenu({ socket }: { socket: Socket }) {
       {/* <Button backgroundColor="#FC6787">
         Play VS Bot <Icon icon="mdi:robot-happy-outline" />
       </Button> */}
-      <Button backgroundColor="#FBC02D" onClick={handelJoinRoom}>
+      <Button backgroundColor="#FBC02D" onClick={handleJoinRoom}>
         Play VS Player <Icon icon="mdi:emoticon-happy-outline" />
       </Button>
-      <Button backgroundColor="#FFFFFF" onClick={handelShowRules}>
+      <Button backgroundColor="#FFFFFF" onClick={handleShowRules}>
         Game Rules <Icon icon="material-symbols:info-outline-rounded" />
       </Button>
     </Conteiner>

@@ -14,8 +14,8 @@ type WinConteinerType = {
 function GameInformation({ socket }: { socket: Socket }) {
   const room = useSelector((state: RootState) => state.roomData);
 
-  function handelStartNewGame() {
-    socket.emit("ResetGame", room.lobby);
+  function handleStartNewGame() {
+    socket.emit("resetGame", room.lobby);
   }
 
   return (
@@ -30,7 +30,7 @@ function GameInformation({ socket }: { socket: Socket }) {
           {room.game.score.lastWin === "draw" ? (
             <>
               <h3>Draw</h3>
-              <button onClick={() => handelStartNewGame()}>
+              <button onClick={() => handleStartNewGame()}>
                 Play again{" "}
                 {room.startNewGameVotes ? room.startNewGameVotes.votes : 0}/2
               </button>
@@ -40,7 +40,7 @@ function GameInformation({ socket }: { socket: Socket }) {
               {" "}
               <p>{room.players[room.game.score.lastWin - 1].playerName}</p>
               <h3>Wins</h3>
-              <button onClick={() => handelStartNewGame()}>
+              <button onClick={() => handleStartNewGame()}>
                 Play again{" "}
                 {room.startNewGameVotes ? room.startNewGameVotes.votes : 0}/2
               </button>

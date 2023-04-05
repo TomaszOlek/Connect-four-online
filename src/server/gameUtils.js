@@ -19,7 +19,7 @@ export const deepCloneBoard = (board) => [
   [...board[7]],
 ]
 
-export const handelChipDrop = (board, currentRoom, selectedRow, index) => {
+export const handleChipDrop = (board, currentRoom, selectedRow, index) => {
   let lastIndex = selectedRow.lastIndexOf(null);
   selectedRow.splice(lastIndex, 1, currentRoom.game.playerTurn.playerIndex);
   board[index] = selectedRow

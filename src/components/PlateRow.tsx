@@ -34,7 +34,7 @@ function PlateRow({
     setIsPlayerTurn(room.game.playerTurn.playerId === socket.id);
   }, [room, socket]);
 
-  const handelRowClick = (index: number) => {
+  const handleRowClick = (index: number) => {
     if (isPlayerTurn) {
       const playerMoveData = {
         rowSelected: index,
@@ -51,7 +51,7 @@ function PlateRow({
   return (
     <RowContainer
       isPlayerTurn={room.game.state === "gameStarted" && isPlayerTurn}
-      onClick={() => handelRowClick(index)}
+      onClick={() => handleRowClick(index)}
     >
       <RowPointer
         id="arrow"

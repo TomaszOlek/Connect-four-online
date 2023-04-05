@@ -30,7 +30,10 @@ function Board({ socket }: { socket: Socket }) {
         )}
       </Plate>
       <PlayerScore socket={socket} playerIndex={1} />
-      {room.game.state === "lookingForPlayers" && <WaitingForPlayer />}
+      {(room.game.state === "lookingForPlayers" ||
+        room.game.state === "oponentLeftLobby") && (
+        <WaitingForPlayer state={room.game.state} />
+      )}
       <BackgroundDecoration
         playerWon={room.game.state === "gameEnded" && room.game.score.lastWin}
       />
@@ -69,7 +72,7 @@ const BackgroundDecoration = styled.p<BackgroundDecorationProps>`
     `) ||
     (props.playerWon === 2 &&
       `
-      background-color: #eb607e;
+      background-color: #ffcf68;
     `)}
 
   z-index: 0;

@@ -1,23 +1,35 @@
 import styled, { keyframes } from "styled-components";
-import { Socket } from "socket.io-client";
 
-import playerOne from "../assets/player-one.svg";
-import playerTwo from "../assets/player-two.svg";
+function WaitingForPlayer({
+  state,
+}: {
+  state: "lookingForPlayers" | "oponentLeftLobby";
+}) {
+  const handelLeaveLobby = () => {
+    // delete lobby
+  };
 
-function WaitingForPlayer() {
   return (
     <ConteinerBackground>
       <Conteiner>
         <Text style={{ textAlign: "center", fontWeight: "500" }}>
-          Waiting for an Oponent
-          <Loader>
-            <Dot />
-            <Dot />
-            <Dot />
-            <Dot />
-          </Loader>
+          {state === "lookingForPlayers" ? (
+            <>
+              <p>Waiting for an Oponent</p>
+              <Loader>
+                <Dot />
+                <Dot />
+                <Dot />
+                <Dot />
+              </Loader>
+            </>
+          ) : (
+            <p>Your oponent left the lobby. Please leave the lobby.</p>
+          )}
         </Text>
-        <LeaveButton>Leave lobby</LeaveButton>
+        <LeaveButton onClick={() => handelLeaveLobby()}>
+          Leave lobby
+        </LeaveButton>
       </Conteiner>
     </ConteinerBackground>
   );
@@ -32,8 +44,9 @@ const Text = styled.p`
 `;
 
 const Conteiner = styled.div`
-  width: 230px;
   height: 120px;
+  padding: 0 20px;
+
   background-color: white;
   border: 3px solid black;
   border-radius: 20px;

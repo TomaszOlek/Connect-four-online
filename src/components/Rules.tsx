@@ -6,12 +6,12 @@ import { updateShowRules } from "../actions";
 function Rules() {
   const dispatch = useDispatch();
 
-  const handelHideRules = () => {
+  const handleHideRules = () => {
     dispatch(updateShowRules(false));
   };
 
   return (
-    <ConteinerBackground onClick={handelHideRules}>
+    <ConteinerBackground onClick={handleHideRules}>
       <Conteiner>
         <h4>How To Play</h4>
         <ul>

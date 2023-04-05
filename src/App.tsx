@@ -16,6 +16,7 @@ function App({ socket }: { socket: Socket }) {
   const room = useSelector((state: RootState) => state.roomData);
   const isShowRules = useSelector((state: RootState) => state.showRules);
 
+  console.log(room.game.state);
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
       dispatch(updateRoomData(roomData));
