@@ -23,9 +23,11 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 `;
-// const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 
-const socket = io("http://localhost:3001");
+const socket = io(
+  "https://connect-four-online.herokuapp.com:" + process.env.PORT
+);
 let store = configureStore({ reducer: rootReducer });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
