@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "startServer": "nodemon src/server/index.js",
-    "start": "concurrently \"yarn run dev\" \"yarn run startServer\""
+    "start": "concurrently \"npm run dev\" \"npm run startServer\""
   },
   "dependencies": {
     "@iconify/react": "^4.1.0",
