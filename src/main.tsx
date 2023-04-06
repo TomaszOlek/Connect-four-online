@@ -23,9 +23,9 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 `;
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001;
 
-const socket = io(`165.232.74.0${PORT}`);
+const socket = io(`165.232.74.0:3001`);
 let store = configureStore({ reducer: rootReducer });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
