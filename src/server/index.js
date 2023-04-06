@@ -25,6 +25,7 @@ const rooms = [];
 const playersOnline = [];
 
 io.on("connection", (socket) => {
+  console.log("123")
   let currentRoom = null;
   const socketPlayerId = socket.id;
   let timer
