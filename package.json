@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "node_modules/.bin/vite",
+    "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "startServer": "nodemon src/server/index.js",

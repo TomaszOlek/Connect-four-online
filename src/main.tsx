@@ -25,16 +25,16 @@ const GlobalStyle = createGlobalStyle`
 `;
 const PORT = process.env.PORT || 3001;
 
-const socket = io();
+const socket = io(`http://localhost:${PORT}`);
 // "https://connect-four-online.herokuapp.com:" + process.env.PORT
 let store = configureStore({ reducer: rootReducer });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <GlobalStyle />
-    {/* <Provider store={store}>
+    <Provider store={store}>
       <App socket={socket} />
-    </Provider> */}
+    </Provider>
     <p>123</p>
   </React.StrictMode>
 );
