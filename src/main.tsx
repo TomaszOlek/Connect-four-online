@@ -34,6 +34,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <Provider store={store}>
       <App socket={socket} />
     </Provider>
-    <p>123</p>
   </React.StrictMode>
 );
