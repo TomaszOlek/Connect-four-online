@@ -24,8 +24,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-console.log(import.meta.env.VITE_STAGE === "dev");
-
 const socket = io(
   `${
     import.meta.env.VITE_STAGE === "dev"
