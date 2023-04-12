@@ -1,4 +1,4 @@
-import { generateNewBoard } from "../gameUtils.js"
+import { generateNewBoard } from "../gameUtils"
 
 import { RoomType } from "../types/RoomType"
 import { Socket, Server } from 'socket.io';

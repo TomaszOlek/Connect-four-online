@@ -1,4 +1,4 @@
-import { generateNewBoard } from "../gameUtils.js"
+import { generateNewBoard } from "../gameUtils"
 import { v4 as uuidv4 } from 'uuid';
 
 import { RoomType } from "../types/RoomType"
