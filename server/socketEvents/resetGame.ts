@@ -1,16 +1,22 @@
 import { generateNewBoard } from "../gameUtils.js"
 
-const PLAYER_OVERTIME = 20;
+import { RoomType } from "../types/RoomType"
+import { Socket, Server } from 'socket.io';
 
-const updateRoomAndEmit = (io, room) => {
-  io.in(room.lobby).emit("updateRoom", room);
-};
+import { PLAYER_OVERTIME } from "../globalVarables"
+import { updateRoomAndEmit } from "../functions/globalFunctions"
 
-function isEven(value) {
+
+function isEven(value: number) {
   return value % 2 === 0;
 }
 
-export default function resetGame(socket, io, lobby, rooms) {
+export default function resetGame({socket, io, lobby, rooms}: {
+  socket: Socket
+  io: Server
+  lobby: string
+  rooms: Array<RoomType>
+}) {
   const room = rooms.find((room) => room.lobby === lobby);
   console.log(`Player ${socket.id} voted to start a new game.`);
 
@@ -24,14 +30,14 @@ export default function resetGame(socket, io, lobby, rooms) {
       votes: 1,
       playersVoted: [socket.id],
     };
-    updateRoomAndEmit(io, room);
+    updateRoomAndEmit({io, room});
   } else if (room.startNewGameVotes.playersVoted.includes(socket.id)) {
     console.log(`The player ${socket.id} already voted to start a new game.`);
     return;
   } else {
     room.startNewGameVotes.votes++;
     room.startNewGameVotes.playersVoted.push(socket.id);
-    updateRoomAndEmit(io, room);
+    updateRoomAndEmit({io, room});
   }
 
   console.log(`Votes to start new game: ${room.startNewGameVotes.votes}/${room.players.length}`);
@@ -39,7 +45,7 @@ export default function resetGame(socket, io, lobby, rooms) {
   if (room.startNewGameVotes.votes === room.players.length) {
     setTimeout(() => {
       const wasPlayerOneTurn = isEven(room.game.score.playerOneWins + room.game.score.playerTwoWins);
-      console.log(`Player ${room.players[0].id} is ${wasPlayerOneTurn ? "now" : "still"} player one.`);
+      console.log(`Player ${room.players[0].playerId} is ${wasPlayerOneTurn ? "now" : "still"} player one.`);
 
       room.game.playerTurn = {
         ...room.players[wasPlayerOneTurn ? 0 : 1],
@@ -49,12 +55,12 @@ export default function resetGame(socket, io, lobby, rooms) {
       room.players.forEach((player) => {
         player.overtimeTime = PLAYER_OVERTIME;
       });
-      room.timerRunning = false;
+      room.timeRunning = false;
       room.game.board = generateNewBoard();
       room.game.state = "gameStarted";
       delete room.startNewGameVotes;
 
-      updateRoomAndEmit(io, room);
+      updateRoomAndEmit({io, room});
     }, 400);
   }
 }

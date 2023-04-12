@@ -7,7 +7,11 @@ import checkForFreeGameRoom from "./socketEvents/checkForFreeGameRoom.js";
 import resetGame from "./socketEvents/resetGame.js";
 import { handleChipDrop, checkForWin } from "./gameUtils.js"
 
-const PLAYER_OVERALL_TIME = 15
+import { RoomType } from "./types/RoomType"
+
+import { PLAYER_OVERALL_TIME } from "./globalVarables.js"
+import { updateRoomAndEmit } from "./functions/globalFunctions"
+
 
 const PORT = process.env.SERVER_PORT || 3001;
 const app = express();
@@ -21,36 +25,34 @@ const io = new Server(server, {
   },
 });
 
-const rooms = [];
-const playersOnline = [];
+
+const rooms: Array<RoomType> = [];
+// const playersOnline  = [];
+
 
 io.on("connection", (socket) => {
-  console.log("123")
-  let currentRoom = null;
+  let currentRoom: string | null = null;
   const socketPlayerId = socket.id;
-  let timer
+  let timer: NodeJS.Timeout;
 
-  const updateCurrentRoom = (newCurrentRoom) =>{
-    currentRoom = newCurrentRoom;
+  const updateCurrentRoomCallback = (updatedCurrentRoom: string) =>{
+    currentRoom = updatedCurrentRoom;
   }
 
-  const updateRoomAndEmit = ( room ) => {
-    io.in(room.lobby).emit("updateRoom", room);
-  };
-
-  const endGame = (room, winner) => {
+  const endGame = (room: RoomType, winner: 1 | 2 | "draw") => {
     clearInterval(timer);
-    room.game.state = "gameEnded"
-    room.game.score.lastWin = winner
-  }
-
-  const startTimer = (room) => {
-    if (room.timerRunning) {
+    room.game.state = "gameEnded";
+    room.game.score.lastWin = winner;
+  };
+  
+  const startTimer = (room: RoomType) => {
+    if (room.timeRunning) {
       return;
     }
-    room.timerRunning = true;
+    
+    room.timeRunning = true;
     timer = setInterval(function(){ 
-      if(room.game.playerTurn.remainingTime !== 0){
+      if(room.game.playerTurn.remainingTime !== 0 && room.game.playerTurn.remainingTime !== "FirstMove"){
         room.game.playerTurn.remainingTime--
       } else{
         room.players[room.game.playerTurn.playerIndex-1].overtimeTime--
@@ -64,14 +66,16 @@ io.on("connection", (socket) => {
       } else if(room.game.state === "oponentLeftLobby"){
         clearInterval(timer);
       }
-      updateRoomAndEmit(room)
+      updateRoomAndEmit({ io, room })
     }, 1000);
   }
 
 
+
   socket.on("checkForFreeGameRoom", () =>
-    checkForFreeGameRoom(socket, io, socketPlayerId, rooms, updateCurrentRoom)
+    checkForFreeGameRoom({socket, io, socketPlayerId, rooms, updateCurrentRoomCallback})
   );
+
   socket.on("playerMove", (playerMoveData) => {
     const roomIndex = rooms.findIndex((room) => room.lobby === playerMoveData.playerLobby);
     const room = rooms[roomIndex]
@@ -87,16 +91,17 @@ io.on("connection", (socket) => {
     room.game.board = board
 
     const winerPlayerOrDraw = checkForWin(board)
-    if (!winerPlayerOrDraw){ // change player adn no winder
+    if (!winerPlayerOrDraw){ // change player if no winder
       room.game.playerTurn = room.game.playerTurn.playerIndex === 1 ?
       {
         ...room.players[1],
-        playerIndex: 2
+        playerIndex: 2,
+        remainingTime: PLAYER_OVERALL_TIME
       } : {
         ...room.players[0],
-        playerIndex: 1
+        playerIndex: 1,
+        remainingTime: PLAYER_OVERALL_TIME
       }
-      room.game.playerTurn.remainingTime = PLAYER_OVERALL_TIME
 
       startTimer(room); 
     }else{
@@ -113,11 +118,11 @@ io.on("connection", (socket) => {
       }
     }
 
-    updateRoomAndEmit(room);
+    updateRoomAndEmit({ io, room});
   });
 
   socket.on("resetGame", (lobby) =>
-    resetGame(socket, io, lobby, rooms)
+    resetGame({socket, io, lobby, rooms})
   );
 
   socket.on("disconnect", () => {
@@ -130,9 +135,8 @@ io.on("connection", (socket) => {
     );
 
     if (currentRoomIndex !== -1) {
-      rooms[currentRoomIndex].players = rooms[
-        currentRoomIndex
-      ].players.filter((player) => player !== socket.id);
+      rooms[currentRoomIndex].players = rooms[currentRoomIndex].players.filter((player) => player.playerId !== socketPlayerId);
+
 
       console.log(rooms[currentRoomIndex].players.length)
 
@@ -142,11 +146,12 @@ io.on("connection", (socket) => {
         rooms[currentRoomIndex].game.state = "oponentLeftLobby"
         io.in(currentRoom).emit("updateRoom", rooms[currentRoomIndex]);
       }
-
     }
   });
 });
 
-server.listen(PORT, process.env.STAGE === "prod" && process.env.SERVER_ADRESS, () => {
-  console.log(`Server is running on port ${PORT}`);
+
+server.listen({ host: process.env.STAGE === "prod" ? process.env.SERVER_ADRESS : "localhost", port: PORT }, () => {
+  console.log(`Server is running on ${process.env.SERVER_ADRESS}:${PORT}`);
 });
+
