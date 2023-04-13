@@ -1,6 +1,7 @@
 
 import { Server } from 'socket.io';
 import { RoomType } from "../types/RoomType"
+import { updateRoomAndEmit } from '../functions/globalFunctions';
 
 export default function handleDisconnect({io, rooms, currentRoom, socketPlayerId, clearTimerCallback}: {
   io: Server
@@ -17,13 +18,16 @@ export default function handleDisconnect({io, rooms, currentRoom, socketPlayerId
     (room) => room.lobby === currentRoom
   );
 
-  if (currentRoomIndex !== -1) {
-    rooms[currentRoomIndex].players = rooms[currentRoomIndex].players.filter((player) => player.playerId !== socketPlayerId);
+  const room = rooms[currentRoomIndex]
 
-    if (rooms[currentRoomIndex].players.length === 1) {
-      rooms[currentRoomIndex].game.state = "oponentLeftLobby"
-      io.in(currentRoom).emit("updateRoom", rooms[currentRoomIndex]);
+  if (currentRoomIndex !== -1) {
+    room.players = room.players.filter((player) => player.playerId !== socketPlayerId);
+
+    if (room.players.length === 1) {
+      room.game.state = "oponentLeftLobby"
+      updateRoomAndEmit({io, room})
     } else {
+      updateRoomAndEmit({io, removed:room.lobby})
       rooms.splice(currentRoomIndex, 1);
     }
   } else{

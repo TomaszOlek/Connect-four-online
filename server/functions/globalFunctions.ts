@@ -2,11 +2,18 @@
 import { Server } from 'socket.io';
 import { RoomType } from "../types/RoomType"
 
-export const updateRoomAndEmit = ({io, room}: {
+
+
+export const updateRoomAndEmit = ({io, room, removed}: {
   io: Server
-  room: RoomType
-}) => {
-  io.in(room.lobby).emit("updateRoom", room);
+  room?: RoomType
+  removed?: string
+} & ({room: RoomType} | {removed: string})) => {
+  if(removed){
+    io.in(removed).emit("updateRoom", "removed");
+  }else{
+    io.in(room.lobby).emit("updateRoom", room);
+  }
 };
 
 export const isUserInLobby = ({rooms,socketPlayerId} : {

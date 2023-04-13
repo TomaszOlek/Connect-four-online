@@ -53,6 +53,9 @@ io.on("connection", (socket) => {
   socket.on("resetGame", (lobby) =>
     resetGame({socket, io, rooms, lobby})
   );
+  socket.on("leaveLobby", ()=>{
+    handleDisconnect({io, rooms, currentRoom, socketPlayerId, clearTimerCallback})
+  })
 
 
   socket.on("disconnect", () => 
