@@ -18,7 +18,6 @@ function App({ socket }: { socket: Socket }) {
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
-      console.log(roomData);
       if (roomData === "removed") {
         dispatch(updateRoomData(initialState));
       }
