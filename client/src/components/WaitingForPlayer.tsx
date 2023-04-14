@@ -1,12 +1,15 @@
 import styled, { keyframes } from "styled-components";
+import { Socket } from "socket.io-client";
 
 function WaitingForPlayer({
   state,
+  socket,
 }: {
   state: "lookingForPlayers" | "oponentLeftLobby";
+  socket: Socket;
 }) {
   const handelLeaveLobby = () => {
-    // delete lobby
+    socket.emit("leaveLobby");
   };
 
   return (

@@ -35,7 +35,7 @@ export type roomType = {
   }
 };
 
-const initialState: roomType = {
+export const initialState: roomType = {
   lobby: "",
   game: {
     state: "",

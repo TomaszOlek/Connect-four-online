@@ -8,16 +8,16 @@ export const generateNewBoard = () => [
   [null, null, null, null, null, null],
 ]
 
-export const deepCloneBoard = (board) => [
-  [...board[0]],
-  [...board[1]],
-  [...board[2]],
-  [...board[3]],
-  [...board[4]],
-  [...board[5]],
-  [...board[6]],
-  [...board[7]],
-]
+// export const deepCloneBoard = (board) => [
+//   [...board[0]],
+//   [...board[1]],
+//   [...board[2]],
+//   [...board[3]],
+//   [...board[4]],
+//   [...board[5]],
+//   [...board[6]],
+//   [...board[7]],
+// ]
 
 export const handleChipDrop = (board, currentRoom, selectedRow, index) => {
   let lastIndex = selectedRow.lastIndexOf(null);
@@ -26,7 +26,7 @@ export const handleChipDrop = (board, currentRoom, selectedRow, index) => {
   return board
 }
 
-export const checkForWin = (board) => {
+export const checkForWin = (board: Array<Array<null|1|2>>) => {
   const numRows = board.length;
   const numCols = board[0].length;
 

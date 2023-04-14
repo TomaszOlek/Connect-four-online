@@ -1,6 +1,5 @@
 {
   "name": "server",
-  "type": "module",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -9,6 +8,10 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "server": "node index.js"
+    "server": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
   }
 }

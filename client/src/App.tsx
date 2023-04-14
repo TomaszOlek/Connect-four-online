@@ -9,6 +9,7 @@ import Rules from "./components/Rules";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./reducers";
 import { updateRoomData } from "./actions";
+import { initialState } from "./reducers/roomData";
 
 function App({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
@@ -17,6 +18,10 @@ function App({ socket }: { socket: Socket }) {
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
+      console.log(roomData);
+      if (roomData === "removed") {
+        dispatch(updateRoomData(initialState));
+      }
       dispatch(updateRoomData(roomData));
     });
 
