@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import dotenv from 'dotenv'
 
 import playerMove from "./socketEvents/playerMove";
 import checkForFreeGameRoom from "./socketEvents/checkForFreeGameRoom";
@@ -14,6 +15,7 @@ import { RoomType } from "./types/RoomType"
 const PORT = process.env.SERVER_PORT || 3001;
 const app = express();
 app.use(cors());
+dotenv.config()
 
 const server = http.createServer(app);
 const io = new Server(server, {
