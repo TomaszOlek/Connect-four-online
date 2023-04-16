@@ -5,6 +5,7 @@ import { Socket } from "socket.io-client";
 import MainMenu from "./components/MainMenu";
 import Board from "./components/Board";
 import Rules from "./components/Rules";
+import LobbyContainer from "./components/LobbyList/LobbyContainer";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./reducers";
@@ -15,6 +16,7 @@ function App({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
   const room = useSelector((state: RootState) => state.roomData);
   const isShowRules = useSelector((state: RootState) => state.showRules);
+  const isShowLobbys = useSelector((state: RootState) => state.showLobbys);
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
@@ -38,6 +40,7 @@ function App({ socket }: { socket: Socket }) {
         <Board socket={socket} />
       )}
       {isShowRules && <Rules />}
+      {isShowLobbys && <LobbyContainer socket={socket} />}
       <Version>Version: {import.meta.env.VITE_APP_VERSION}</Version>
     </Conteiner>
   );

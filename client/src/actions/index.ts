@@ -10,3 +10,10 @@ export const updateShowRules = (showRules: boolean) => ({
   payload: showRules
 });
 
+
+export const updateShowLobbys = (showLobbys: boolean) => ({
+  type: "showLobbys/updateShowLobbys",
+  payload: showLobbys
+});
+
+
