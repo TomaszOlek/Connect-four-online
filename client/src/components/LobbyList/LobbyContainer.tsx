@@ -10,15 +10,15 @@ import LobbysList from "./LobbysList";
 function LobbyContainer({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
 
-  const handleHideRules = () => {
+  const handleHideLobbys = () => {
     dispatch(updateShowLobbys(false));
   };
 
   return (
-    <ConteinerBackground onClick={handleHideRules}>
+    <ConteinerBackground onClick={handleHideLobbys}>
       <Conteiner onClick={(e) => e.stopPropagation()}>
         <LobbyCreation socket={socket} />
-        <LobbysList />
+        <LobbysList socket={socket} />
       </Conteiner>
     </ConteinerBackground>
   );

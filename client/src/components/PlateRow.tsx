@@ -61,14 +61,14 @@ function PlateRow({
             : yellowMarker
         }
       />
-      {row.map((rowChip: 1 | 2 | null) => {
+      {row.map((rowChip: 1 | 2 | null, index: number) => {
         switch (rowChip) {
           case 1:
-            return <Chip variant="red" />;
+            return <Chip variant="red" key={index} />;
           case 2:
-            return <Chip variant="yellow" />;
+            return <Chip variant="yellow" key={index} />;
           default:
-            return <Chip variant="empty" />;
+            return <Chip variant="empty" key={index} />;
         }
       })}
     </RowContainer>

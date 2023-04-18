@@ -9,7 +9,12 @@ import LobbyContainer from "./components/LobbyList/LobbyContainer";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./reducers";
-import { updateRoomData } from "./actions";
+import {
+  updateRoomData,
+  updatePrivateRoomData,
+  updateShowRules,
+  updateShowLobbys,
+} from "./actions";
 import { initialState } from "./reducers/roomData";
 
 function App({ socket }: { socket: Socket }) {
@@ -20,17 +25,28 @@ function App({ socket }: { socket: Socket }) {
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
-      console.log(roomData);
       if (roomData === "removed") {
         dispatch(updateRoomData(initialState));
+        closeAllMenu();
+      } else {
+        dispatch(updateRoomData(roomData));
+        closeAllMenu();
       }
-      dispatch(updateRoomData(roomData));
+    });
+    socket.on("updatePrivateLobbys", (roomsData) => {
+      dispatch(updatePrivateRoomData(roomsData));
     });
 
     return () => {
       socket.off("updateRoom");
+      socket.off("updatePrivateLobbys");
     };
   }, [socket]);
+
+  const closeAllMenu = () => {
+    dispatch(updateShowRules(false));
+    dispatch(updateShowLobbys(false));
+  };
 
   return (
     <Conteiner>

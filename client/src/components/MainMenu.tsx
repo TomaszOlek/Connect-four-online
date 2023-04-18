@@ -32,7 +32,7 @@ function MainMenu({ socket }: { socket: Socket }) {
         Quick Play <Icon icon="mdi:emoticon-happy-outline" />
       </Button>
       <Button backgroundColor="#FC6787" onClick={showPrevetLobbys}>
-        Privet Lobby <Icon icon="mdi:face-cool-outline" />
+        Private Lobby <Icon icon="mdi:face-cool-outline" />
       </Button>
       {/* <Button backgroundColor="#60daff">
         Play VS Bot <Icon icon="mdi:robot-happy-outline" />

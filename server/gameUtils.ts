@@ -26,7 +26,7 @@ export const handleChipDrop = (board, currentRoom, selectedRow, index) => {
   return board
 }
 
-export const checkForWin = (board: Array<Array<null|1|2>>) => {
+export const checkForWin = (board: Array<Array<null | 1 | 2>>) => {
   const numRows = board.length;
   const numCols = board[0].length;
 

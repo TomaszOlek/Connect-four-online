@@ -1,31 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { Socket } from "socket.io-client";
+
+import { useSelector } from "react-redux";
+import { RootState } from "../../reducers";
 
 function LobbyCreation({ socket }: { socket: Socket }) {
   const [lobbyName, setLobbyName] = useState("");
   const [lobbyPassword, setLobbyPassword] = useState("");
-  const [preivetLobbys, setPreivetLobbys] = useState([]);
 
-  useEffect(() => {
-    socket.on("updatePrivetLobbys", (lobbys) => {
-      setPreivetLobbys(lobbys);
-    });
-
-    return () => {
-      socket.off("updatePrivetLobbys");
-    };
-  }, [socket]);
+  const privateLobbys = useSelector(
+    (state: RootState) => state.privateRoomData
+  );
 
   const handelCreateLobby = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (lobbyPassword === "") {
-      //Need to add pass
-    } else if (lobbyName in preivetLobbys) {
-      //Lobby Namme taken
+    if (privateLobbys.some((item) => item.lobbyName === lobbyName)) {
+      //Notification: LobbyName Taken
+      console.log("LobbyName Taken");
     } else {
-      socket.emit("createPrivateLobby");
+      socket.emit("createPrivateLobby", { lobbyName, lobbyPassword });
     }
   };
 

@@ -8,14 +8,14 @@ import { updateRoomAndEmit, isUserInLobby } from "../functions/globalFunctions"
 import { PLAYER_OVERTIME } from "../globalVarables"
 
 
-export default function checkForFreeGameRoom( {socket, io, socketPlayerId, rooms, updateCurrentRoomCallback}: {
+export default function checkForFreeGameRoom({ socket, io, socketPlayerId, rooms, updateCurrentRoomCallback }: {
   socket: Socket
   io: Server
   socketPlayerId: string
   rooms: Array<RoomType>
   updateCurrentRoomCallback: (updatedCurrentRoom: string) => void
 }) {
-  if (isUserInLobby({rooms,socketPlayerId})){
+  if (isUserInLobby({ rooms, socketPlayerId })) {
     return;
   }
   let currentRoom: string | null = null;
@@ -50,7 +50,7 @@ export default function checkForFreeGameRoom( {socket, io, socketPlayerId, rooms
   }
 
   currentRoom = uuidv4();
-  if (currentRoom){
+  if (currentRoom) {
     updateCurrentRoomCallback(currentRoom)
     socket.join(currentRoom);
 
@@ -59,14 +59,14 @@ export default function checkForFreeGameRoom( {socket, io, socketPlayerId, rooms
       playerName: `Player1`,
       overtimeTime: PLAYER_OVERTIME
     };
-    rooms.push({
+    const room: RoomType = {
       lobby: currentRoom,
       game: {
         state: "lookingForPlayers",
         board: generateNewBoard(),
         playerTurn: {
           ...newPlayer,
-          remainingTime : "FirstMove",
+          remainingTime: "FirstMove",
           playerIndex: 1,
         },
         score: {
@@ -77,15 +77,13 @@ export default function checkForFreeGameRoom( {socket, io, socketPlayerId, rooms
       },
       players: [newPlayer],
       timeRunning: false,
-    });
+    }
+    rooms.push(room);
+
+    updateRoomAndEmit({ io, room })
   }
 
-  const index = rooms.findIndex((room) => room.lobby === currentRoom);
-  
   console.log(`Player: ${socketPlayerId}, Created Room: ${currentRoom}`)
-  if (currentRoom){
-    io.in(currentRoom).emit("updateRoom", rooms[index]);
-  }
 
   return currentRoom
 };
