@@ -1,23 +1,33 @@
-import { generateNewBoard } from "../gameUtils"
-
-import { RoomType } from "../types/RoomType"
 import { Socket, Server } from 'socket.io';
 
 import { PLAYER_OVERTIME } from "../globalVarables"
 import { updateRoomAndEmit } from "../functions/globalFunctions"
+import { generateNewBoard } from "../gameUtils"
 
+import { RoomType } from "../types/RoomType"
+import { PrivateLobbyType } from '../types/PrivateLobbyType';
 
 function isEven(value: number) {
   return value % 2 === 0;
 }
 
-export default function resetGame({socket, io, lobby, rooms}: {
+export default function resetGame({ socket, io, lobby, rooms, privateRooms }: {
   socket: Socket
   io: Server
   lobby: string
   rooms: Array<RoomType>
+  privateRooms: Array<PrivateLobbyType>
 }) {
-  const room = rooms.find((room) => room.lobby === lobby);
+  let room: RoomType | PrivateLobbyType
+
+  if (lobby.startsWith("Private")) {
+    room = privateRooms.find((room) => room.lobby === lobby);
+
+  } else {
+    room = rooms.find((room) => room.lobby === lobby);
+  }
+
+
   console.log(`Player ${socket.id} voted to start a new game.`);
 
   if (!room) {
@@ -30,14 +40,14 @@ export default function resetGame({socket, io, lobby, rooms}: {
       votes: 1,
       playersVoted: [socket.id],
     };
-    updateRoomAndEmit({io, room});
+    updateRoomAndEmit({ io, room });
   } else if (room.startNewGameVotes.playersVoted.includes(socket.id)) {
     console.log(`The player ${socket.id} already voted to start a new game.`);
     return;
   } else {
     room.startNewGameVotes.votes++;
     room.startNewGameVotes.playersVoted.push(socket.id);
-    updateRoomAndEmit({io, room});
+    updateRoomAndEmit({ io, room });
   }
 
   console.log(`Votes to start new game: ${room.startNewGameVotes.votes}/${room.players.length}`);
@@ -60,7 +70,7 @@ export default function resetGame({socket, io, lobby, rooms}: {
       room.game.state = "gameStarted";
       delete room.startNewGameVotes;
 
-      updateRoomAndEmit({io, room});
+      updateRoomAndEmit({ io, room });
     }, 400);
   }
 }

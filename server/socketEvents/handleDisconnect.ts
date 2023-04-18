@@ -3,9 +3,12 @@ import { Server } from 'socket.io';
 import { RoomType } from "../types/RoomType"
 import { updateRoomAndEmit } from '../functions/globalFunctions';
 
-export default function handleDisconnect({io, rooms, currentRoom, socketPlayerId, clearTimerCallback}: {
+import { PrivateLobbyType } from '../types/PrivateLobbyType';
+
+export default function handleDisconnect({ io, rooms, privateRooms, currentRoom, socketPlayerId, clearTimerCallback }: {
   io: Server
   rooms: Array<RoomType>
+  privateRooms: Array<PrivateLobbyType>
   currentRoom: string | null
   socketPlayerId: string
   clearTimerCallback: () => void
@@ -13,24 +16,41 @@ export default function handleDisconnect({io, rooms, currentRoom, socketPlayerId
   if (!currentRoom) {
     return;
   }
+  let room: PrivateLobbyType | RoomType
+  let roomIndex: number
+  const isRoomPrivet = currentRoom.startsWith("Private")
 
-  const currentRoomIndex = rooms.findIndex(
-    (room) => room.lobby === currentRoom
-  );
+  if (isRoomPrivet) {
+    roomIndex = privateRooms.findIndex(
+      (room) => room.lobby === currentRoom
+    );
 
-  const room = rooms[currentRoomIndex]
+    room = privateRooms[roomIndex]
+  } else {
+    roomIndex = rooms.findIndex(
+      (room) => room.lobby === currentRoom
+    );
 
-  if (currentRoomIndex !== -1) {
+    room = rooms[roomIndex]
+  }
+
+
+  if (roomIndex !== -1) {
     room.players = room.players.filter((player) => player.playerId !== socketPlayerId);
 
     if (room.players.length === 1) {
       room.game.state = "oponentLeftLobby"
-      updateRoomAndEmit({io, room})
+      updateRoomAndEmit({ io, room })
     } else {
-      updateRoomAndEmit({io, removed:room.lobby})
-      rooms.splice(currentRoomIndex, 1);
+      updateRoomAndEmit({ io, removed: room.lobby })
+      if (isRoomPrivet) {
+        privateRooms.splice(roomIndex, 1);
+        io.emit("updatePrivateLobbys", privateRooms);
+      } else {
+        rooms.splice(roomIndex, 1);
+      }
     }
-  } else{
+  } else {
     console.log("User was in lobby but the lobby was not found?? (BAD)")
   }
 }

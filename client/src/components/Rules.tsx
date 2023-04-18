@@ -12,7 +12,7 @@ function Rules() {
 
   return (
     <ConteinerBackground onClick={handleHideRules}>
-      <Conteiner>
+      <Conteiner onClick={(e) => e.stopPropagation()}>
         <h4>How To Play</h4>
         <ul>
           <li>

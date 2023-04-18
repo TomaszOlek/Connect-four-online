@@ -5,29 +5,48 @@ import { Socket } from "socket.io-client";
 import MainMenu from "./components/MainMenu";
 import Board from "./components/Board";
 import Rules from "./components/Rules";
+import LobbyContainer from "./components/LobbyList/LobbyContainer";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./reducers";
-import { updateRoomData } from "./actions";
+import {
+  updateRoomData,
+  updatePrivateRoomData,
+  updateShowRules,
+  updateShowLobbys,
+} from "./actions";
 import { initialState } from "./reducers/roomData";
 
 function App({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
   const room = useSelector((state: RootState) => state.roomData);
   const isShowRules = useSelector((state: RootState) => state.showRules);
+  const isShowLobbys = useSelector((state: RootState) => state.showLobbys);
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
       if (roomData === "removed") {
         dispatch(updateRoomData(initialState));
+        closeAllMenu();
+      } else {
+        dispatch(updateRoomData(roomData));
+        closeAllMenu();
       }
-      dispatch(updateRoomData(roomData));
+    });
+    socket.on("updatePrivateLobbys", (roomsData) => {
+      dispatch(updatePrivateRoomData(roomsData));
     });
 
     return () => {
       socket.off("updateRoom");
+      socket.off("updatePrivateLobbys");
     };
   }, [socket]);
+
+  const closeAllMenu = () => {
+    dispatch(updateShowRules(false));
+    dispatch(updateShowLobbys(false));
+  };
 
   return (
     <Conteiner>
@@ -37,6 +56,7 @@ function App({ socket }: { socket: Socket }) {
         <Board socket={socket} />
       )}
       {isShowRules && <Rules />}
+      {isShowLobbys && <LobbyContainer socket={socket} />}
       <Version>Version: {import.meta.env.VITE_APP_VERSION}</Version>
     </Conteiner>
   );

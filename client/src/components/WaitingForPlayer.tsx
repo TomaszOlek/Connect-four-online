@@ -40,7 +40,7 @@ function WaitingForPlayer({
 
 export default WaitingForPlayer;
 
-const Text = styled.p`
+const Text = styled.div`
   display: flex;
   flex-direction: row;
   gap: 4px;

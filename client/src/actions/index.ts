@@ -5,8 +5,20 @@ export const updateRoomData = (roomData: roomType) => ({
   payload: roomData
 });
 
+export const updatePrivateRoomData = (roomData: roomType) => ({
+  type: "privateRoomData/updatePrivateRoomData",
+  payload: roomData
+});
+
 export const updateShowRules = (showRules: boolean) => ({
   type: "showRules/updateShowRules",
   payload: showRules
 });
+
+
+export const updateShowLobbys = (showLobbys: boolean) => ({
+  type: "showLobbys/updateShowLobbys",
+  payload: showLobbys
+});
+
 

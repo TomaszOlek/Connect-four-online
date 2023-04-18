@@ -53,7 +53,7 @@ const Conteiner = styled.div`
   gap: 35px;
   isolation: isolate;
 `;
-const BackgroundDecoration = styled.p<BackgroundDecorationProps>`
+const BackgroundDecoration = styled.div<BackgroundDecorationProps>`
   content: "";
   width: 100vw;
   height: 80px;
