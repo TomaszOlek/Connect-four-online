@@ -12,9 +12,11 @@ type PlayerType = {
 
 export type roomType = {
   lobby: string;
+  lobbyName?: string,
+  lobbyPassworld?: string,
   game: {
     state: string;
-    board: Array<Array<null|1|2>>;
+    board: Array<Array<null | 1 | 2>>;
     playerTurn: {
       playerId: string;
       playerName: string;

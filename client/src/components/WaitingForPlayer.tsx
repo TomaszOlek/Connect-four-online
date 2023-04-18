@@ -1,33 +1,47 @@
 import styled, { keyframes } from "styled-components";
 import { Socket } from "socket.io-client";
 
-function WaitingForPlayer({
-  state,
-  socket,
-}: {
-  state: "lookingForPlayers" | "oponentLeftLobby";
-  socket: Socket;
-}) {
+import { useSelector } from "react-redux";
+import { RootState } from "../reducers";
+
+function WaitingForPlayer({ socket }: { socket: Socket }) {
   const handelLeaveLobby = () => {
     socket.emit("leaveLobby");
   };
+  const room = useSelector((state: RootState) => state.roomData);
 
   return (
     <ConteinerBackground>
       <Conteiner>
         <Text style={{ textAlign: "center", fontWeight: "500" }}>
-          {state === "lookingForPlayers" ? (
-            <>
-              <p>Waiting for an Oponent</p>
-              <Loader>
-                <Dot />
-                <Dot />
-                <Dot />
-                <Dot />
-              </Loader>
-            </>
+          {room.game.state === "lookingForPlayers" ? (
+            room.lobby.startsWith("Private") ? (
+              <>
+                <WaitingOponent>
+                  <p>Waiting for an Opponent</p>
+                  <Loader>
+                    <Dot />
+                    <Dot />
+                    <Dot />
+                    <Dot />
+                  </Loader>
+                </WaitingOponent>
+                <p>Lobby Name: {room.lobbyName}</p>
+                <p>Lobby Password: {room.lobbyPassworld}</p>
+              </>
+            ) : (
+              <WaitingOponent>
+                <p>Waiting for an Opponent</p>
+                <Loader>
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                </Loader>
+              </WaitingOponent>
+            )
           ) : (
-            <p>Your oponent left the lobby. Please leave the lobby.</p>
+            <p>Your opponent left the lobby. Please leave the lobby.</p>
           )}
         </Text>
         <LeaveButton onClick={() => handelLeaveLobby()}>
@@ -40,15 +54,22 @@ function WaitingForPlayer({
 
 export default WaitingForPlayer;
 
+const WaitingOponent = styled.div`
+  height: 24px;
+
+  display: flex;
+  align-self: center;
+  gap: 10px;
+`;
 const Text = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 4px;
-`;
+  flex-direction: column;
 
+  gap: 4px;
+  text-align: center;
+`;
 const Conteiner = styled.div`
-  height: 120px;
-  padding: 0 20px;
+  padding: 20px 30px;
 
   background-color: white;
   border: 3px solid black;
@@ -61,7 +82,6 @@ const Conteiner = styled.div`
   gap: 8px;
   z-index: 2;
 `;
-
 const ConteinerBackground = styled.div`
   width: 100%;
   height: 100%;
@@ -78,7 +98,6 @@ const ConteinerBackground = styled.div`
   background-color: #3632325e;
   z-index: 2;
 `;
-
 const LeaveButton = styled.button`
   align-items: center;
   background-color: #ffffff;
@@ -96,6 +115,7 @@ const LeaveButton = styled.button`
 
   user-select: none;
 
+  margin-top: 6px;
   padding: 8px 14px;
 
   font-size: 13px;
@@ -114,7 +134,6 @@ const LeaveButton = styled.button`
     transform: translateY(0);
   }
 `;
-
 const Loader = styled.div`
   display: inline-block;
   position: relative;

@@ -32,7 +32,7 @@ function Board({ socket }: { socket: Socket }) {
       <PlayerScore socket={socket} playerIndex={1} />
       {(room.game.state === "lookingForPlayers" ||
         room.game.state === "oponentLeftLobby") && (
-        <WaitingForPlayer state={room.game.state} socket={socket} />
+        <WaitingForPlayer socket={socket} />
       )}
       <BackgroundDecoration
         playerWon={room.game.state === "gameEnded" && room.game.score.lastWin}
