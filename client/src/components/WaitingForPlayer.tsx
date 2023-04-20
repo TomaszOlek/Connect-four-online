@@ -18,7 +18,7 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
             room.lobby.startsWith("Private") ? (
               <>
                 <WaitingOponent>
-                  <p>Waiting for an Opponent</p>
+                  <p>Waiting for an Oponent</p>
                   <Loader>
                     <Dot />
                     <Dot />
@@ -40,6 +40,20 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
                 </Loader>
               </WaitingOponent>
             )
+          ) : room.lobby.startsWith("Private") ? (
+            <>
+              <WaitingOponent>
+                <p>Your opponent left the lobby. Waiting for a new Oponen</p>
+                <Loader>
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                </Loader>
+              </WaitingOponent>
+              <p>Lobby Name: {room.lobbyName}</p>
+              <p>Lobby Password: {room.lobbyPassworld}</p>
+            </>
           ) : (
             <p>Your opponent left the lobby. Please leave the lobby.</p>
           )}
