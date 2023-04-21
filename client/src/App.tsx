@@ -6,6 +6,7 @@ import MainMenu from "./components/MainMenu";
 import Board from "./components/Board";
 import Rules from "./components/Rules";
 import LobbyContainer from "./components/LobbyList/LobbyContainer";
+import BotDifficultySelection from "./components/BotDifficultySelection";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./reducers";
@@ -14,6 +15,7 @@ import {
   updatePrivateRoomData,
   updateShowRules,
   updateShowLobbys,
+  updateShowBotDifficult,
 } from "./actions";
 import { initialState } from "./reducers/roomData";
 
@@ -22,6 +24,9 @@ function App({ socket }: { socket: Socket }) {
   const room = useSelector((state: RootState) => state.roomData);
   const isShowRules = useSelector((state: RootState) => state.showRules);
   const isShowLobbys = useSelector((state: RootState) => state.showLobbys);
+  const isShowBotDifficulty = useSelector(
+    (state: RootState) => state.showBotDifficulty
+  );
 
   useEffect(() => {
     socket.on("updateRoom", (roomData) => {
@@ -46,6 +51,7 @@ function App({ socket }: { socket: Socket }) {
   const closeAllMenu = () => {
     dispatch(updateShowRules(false));
     dispatch(updateShowLobbys(false));
+    dispatch(updateShowBotDifficult(false));
   };
 
   return (
@@ -57,6 +63,7 @@ function App({ socket }: { socket: Socket }) {
       )}
       {isShowRules && <Rules />}
       {isShowLobbys && <LobbyContainer socket={socket} />}
+      {isShowBotDifficulty && <BotDifficultySelection />}
       <Version>Version: {import.meta.env.VITE_APP_VERSION}</Version>
     </Conteiner>
   );
@@ -69,7 +76,6 @@ const Conteiner = styled.div`
   height: 100%;
   background-color: #7a45ff;
 `;
-
 const Version = styled.p`
   position: absolute;
   right: 5px;
