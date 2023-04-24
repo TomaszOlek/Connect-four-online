@@ -5,7 +5,11 @@ import { Socket } from "socket.io-client";
 import Logo from "./Logo";
 
 import { useDispatch } from "react-redux";
-import { updateShowRules, updateShowLobbys } from "../actions";
+import {
+  updateShowRules,
+  updateShowLobbys,
+  updateShowBotDifficult,
+} from "../actions";
 
 interface ButtonProps {
   backgroundColor: string;
@@ -25,6 +29,10 @@ function MainMenu({ socket }: { socket: Socket }) {
     dispatch(updateShowLobbys(true));
   };
 
+  const showBotDifficulty = () => {
+    dispatch(updateShowBotDifficult(true));
+  };
+
   return (
     <Conteiner>
       <Logo />
@@ -34,9 +42,9 @@ function MainMenu({ socket }: { socket: Socket }) {
       <Button backgroundColor="#FC6787" onClick={showPrevetLobbys}>
         Private Lobby <Icon icon="mdi:face-cool-outline" />
       </Button>
-      {/* <Button backgroundColor="#60daff">
-        Play VS Bot <Icon icon="mdi:robot-happy-outline" />
-      </Button> */}
+      <Button backgroundColor="#60daff" onClick={showBotDifficulty}>
+        Play vs CPU <Icon icon="mdi:robot-happy-outline" />
+      </Button>
       <Button backgroundColor="#FFFFFF" onClick={handleShowRules}>
         Game Rules <Icon icon="material-symbols:info-outline-rounded" />
       </Button>

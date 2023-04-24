@@ -43,7 +43,7 @@ export default function createPrivateLobby({ socket, io, privateRooms, lobbyInfo
           playerIndex: 1,
         },
         score: {
-          lastWin: null,
+          lastWin: 0,
           playerOneWins: 0,
           playerTwoWins: 0,
         }

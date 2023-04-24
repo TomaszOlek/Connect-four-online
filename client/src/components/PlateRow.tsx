@@ -5,8 +5,12 @@ import { Socket } from "socket.io-client";
 import yellowMarker from "../assets/marker-yellow.svg";
 import redMarker from "../assets/marker-red.svg";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../reducers";
+
+import { handleChipDrop, getNextMove } from "./BotComponents/BoardFunctions";
+
+import { updateRoomData } from "../actions";
 
 type ChipType = {
   variant: "red" | "yellow" | "empty";
@@ -19,32 +23,77 @@ function PlateRow({
   socket,
   index,
   row,
+  isLocalGame,
 }: {
   socket: Socket;
   index: number;
   row: any;
+  isLocalGame: boolean;
 }) {
   const [isPlayerTurn, setIsPlayerTurn] = useState(false);
   const room = useSelector((state: RootState) => state.roomData);
-  const playerIndex = room.players.findIndex(
-    (player) => player.playerId === socket.id
-  );
+  const dispatch = useDispatch();
+  let playerIndex;
+
+  if (!isLocalGame) {
+    playerIndex = room.players.findIndex(
+      (player) => player.playerId === socket.id
+    );
+    //TODO: Not found Player
+  }
 
   useEffect(() => {
-    setIsPlayerTurn(room.game.playerTurn.playerId === socket.id);
+    if (isLocalGame) {
+      setIsPlayerTurn(room.game.playerTurn.playerName === "Player");
+    } else {
+      setIsPlayerTurn(room.game.playerTurn.playerId === socket.id);
+    }
   }, [room, socket]);
 
   const handleRowClick = (index: number) => {
     if (isPlayerTurn) {
-      const playerMoveData = {
-        rowSelected: index,
-        playerId: socket.id,
-        playerLobby: room.lobby,
-      };
+      if (isLocalGame) {
+        handelLocalMove(index);
+      } else {
+        const playerMoveData = {
+          rowSelected: index,
+          playerId: socket.id,
+          playerLobby: room.lobby,
+        };
 
-      socket.emit("playerMove", playerMoveData);
+        socket.emit("playerMove", playerMoveData);
+      }
     } else {
       console.log("Please wait for your turn!");
+    }
+  };
+
+  const handelLocalMove = (index: number) => {
+    if (room.game.state !== "gameStarted") {
+      return;
+    }
+
+    const selectedRow = room.game.board[index];
+    if (!selectedRow.includes(0)) {
+      //TODO: Notification - move not allowed: no space
+      return;
+    }
+
+    let roomCoppy = JSON.parse(JSON.stringify(room));
+    let updatedRoom = handleChipDrop(roomCoppy, index);
+
+    dispatch(updateRoomData(updatedRoom));
+
+    if (updatedRoom.game.playerTurn.playerName === "Bot") {
+      let roomCoppy = JSON.parse(JSON.stringify(updatedRoom));
+
+      setTimeout(() => {
+        getNextMove(updatedRoom.game.board, 2).then((move) => {
+          roomCoppy = handleChipDrop(roomCoppy, move.columnMove);
+          dispatch(updateRoomData(roomCoppy));
+          console.log("Bot move ", move.columnMove);
+        });
+      }, 200);
     }
   };
 
@@ -56,12 +105,14 @@ function PlateRow({
       <RowPointer
         id="arrow"
         src={
-          room.players[playerIndex].playerName === "Player1"
+          isLocalGame
+            ? redMarker
+            : playerIndex && room.players[playerIndex].playerName === "Player1"
             ? redMarker
             : yellowMarker
         }
       />
-      {row.map((rowChip: 1 | 2 | null, index: number) => {
+      {row.map((rowChip: 1 | 2 | 0, index: number) => {
         switch (rowChip) {
           case 1:
             return <Chip variant="red" key={index} />;

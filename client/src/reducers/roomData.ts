@@ -16,7 +16,7 @@ export type roomType = {
   lobbyPassworld?: string,
   game: {
     state: string;
-    board: Array<Array<null | 1 | 2>>;
+    board: Array<Array<0 | 1 | 2>>;
     playerTurn: {
       playerId: string;
       playerName: string;
@@ -24,7 +24,7 @@ export type roomType = {
       remainingTime: number | "FirstMove";
     };
     score: {
-      lastWin: null | 1 | 2 | "draw";
+      lastWin: 0 | 1 | 2 | "draw";
       playerOneWins: number;
       playerTwoWins: number;
     };
@@ -49,7 +49,7 @@ export const initialState: roomType = {
       remainingTime: 0,
     },
     score: {
-      lastWin: null,
+      lastWin: 0,
       playerOneWins: 0,
       playerTwoWins: 0,
     },
@@ -57,6 +57,7 @@ export const initialState: roomType = {
   players: [],
   timeRunning: false,
 };
+
 
 
 function roomData(state: roomType = initialState, action: roomDataAction) {

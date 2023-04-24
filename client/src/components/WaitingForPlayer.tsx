@@ -14,11 +14,11 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
     <ConteinerBackground>
       <Conteiner>
         <Text style={{ textAlign: "center", fontWeight: "500" }}>
-          {room.game.state === "lookingForPlayers" ? (
-            room.lobby.startsWith("Private") ? (
+          {room.game.state === "lookingForPlayers" &&
+            (room.lobby.startsWith("Private") ? (
               <>
                 <WaitingOponent>
-                  <p>Waiting for an Opponent</p>
+                  <p>Waiting for an Oponent</p>
                   <Loader>
                     <Dot />
                     <Dot />
@@ -39,7 +39,23 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
                   <Dot />
                 </Loader>
               </WaitingOponent>
-            )
+            ))}
+
+          {room.game.state === "lookingForPlayers" &&
+          room.lobby.startsWith("Private") ? (
+            <>
+              <WaitingOponent>
+                <p>Your opponent left the lobby. Waiting for a new Oponen</p>
+                <Loader>
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                  <Dot />
+                </Loader>
+              </WaitingOponent>
+              <p>Lobby Name: {room.lobbyName}</p>
+              <p>Lobby Password: {room.lobbyPassworld}</p>
+            </>
           ) : (
             <p>Your opponent left the lobby. Please leave the lobby.</p>
           )}
