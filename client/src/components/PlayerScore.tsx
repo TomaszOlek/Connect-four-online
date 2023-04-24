@@ -7,36 +7,45 @@ import playerTwo from "../assets/player-two.svg";
 interface MainMenuProps {
   socket: Socket;
   playerIndex: 0 | 1;
+  isLocalGame: boolean;
 }
 
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 
-function PlayerScore({ socket, playerIndex }: MainMenuProps) {
+function PlayerScore({ socket, playerIndex, isLocalGame }: MainMenuProps) {
   const room = useSelector((state: RootState) => state.roomData);
   return (
     <Conteiner>
       <PlayerImage src={playerIndex === 0 ? playerOne : playerTwo} />
-      <PlayerName>
-        {room.players[playerIndex]
-          ? room.players[playerIndex].playerId === socket.id
-            ? "You"
-            : room.players[playerIndex].playerName
-          : `Player${playerIndex + 1}`}
-      </PlayerName>
-      <PlayerOvertime>
-        Extra time:{" "}
-        <span
-          style={
-            room.players[playerIndex] &&
-            (room.players[playerIndex].overtimeTime < 5 ? { color: "red" } : {})
-          }
-        >
+      {isLocalGame ? (
+        <LocalPlayerName>{playerIndex === 0 ? "You" : "Bot"}</LocalPlayerName>
+      ) : (
+        <PlayerName>
           {room.players[playerIndex]
-            ? room.players[playerIndex].overtimeTime
-            : 20}
-        </span>
-      </PlayerOvertime>
+            ? room.players[playerIndex].playerId === socket.id
+              ? "You"
+              : room.players[playerIndex].playerName
+            : `Player${playerIndex + 1}`}
+        </PlayerName>
+      )}
+      {!isLocalGame && (
+        <PlayerOvertime>
+          Extra time:{" "}
+          <span
+            style={
+              room.players[playerIndex] &&
+              (room.players[playerIndex].overtimeTime < 5
+                ? { color: "red" }
+                : {})
+            }
+          >
+            {room.players[playerIndex]
+              ? room.players[playerIndex].overtimeTime
+              : 20}
+          </span>
+        </PlayerOvertime>
+      )}
       <PlayerWins>
         Wins:{" "}
         {playerIndex === 0
@@ -84,4 +93,9 @@ const PlayerImage = styled.img`
 const PlayerName = styled.p`
   font-size: 16px;
   font-weight: 500;
+`;
+const LocalPlayerName = styled.p`
+  font-size: 30px;
+  font-weight: 500;
+  margin-bottom: 3px;
 `;

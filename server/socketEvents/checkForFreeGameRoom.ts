@@ -70,7 +70,7 @@ export default function checkForFreeGameRoom({ socket, io, socketPlayerId, rooms
           playerIndex: 1,
         },
         score: {
-          lastWin: null,
+          lastWin: 0,
           playerOneWins: 0,
           playerTwoWins: 0,
         }

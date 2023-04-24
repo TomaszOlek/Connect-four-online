@@ -5,7 +5,7 @@ export type PrivateLobbyType = {
   lobbyPassworld: string,
   game: {
     state: string;
-    board: Array<Array<null | 1 | 2>>;
+    board: Array<Array<0 | 1 | 2>>;
     playerTurn: {
       playerId: string;
       playerName: string;
@@ -13,7 +13,7 @@ export type PrivateLobbyType = {
       remainingTime: number | "FirstMove";
     };
     score: {
-      lastWin: null | 1 | 2 | "draw";
+      lastWin: 0 | 1 | 2 | "draw";
       playerOneWins: number;
       playerTwoWins: number;
     };

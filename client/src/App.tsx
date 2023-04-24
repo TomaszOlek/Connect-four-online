@@ -6,7 +6,7 @@ import MainMenu from "./components/MainMenu";
 import Board from "./components/Board";
 import Rules from "./components/Rules";
 import LobbyContainer from "./components/LobbyList/LobbyContainer";
-import BotDifficultySelection from "./components/BotDifficultySelection";
+import BotDifficultySelection from "./components/BotComponents/BotDifficultySelection";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./reducers";

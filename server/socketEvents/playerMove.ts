@@ -80,7 +80,7 @@ export default function playerMove({ io, rooms, privateRooms, playerMoveData, up
   let board = room.game.board
   //isMoveValid
   const selectedRow = board[playerMoveData.rowSelected]
-  if (!selectedRow.includes(null) || room.game.state !== "gameStarted") {
+  if (!selectedRow.includes(0) || room.game.state !== "gameStarted") {
     return;
   }
 

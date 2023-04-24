@@ -10,26 +10,34 @@ import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 
 interface BackgroundDecorationProps {
-  playerWon: 1 | 2 | null | "draw" | false;
+  playerWon: 1 | 2 | 0 | "draw" | false;
 }
 
 function Board({ socket }: { socket: Socket }) {
   const room = useSelector((state: RootState) => state.roomData);
+  const isLocalGame = room.lobby.startsWith("Local");
+
   return (
     <Conteiner>
       <LobbyTitle>Lobby: {room.lobby}</LobbyTitle>
 
-      <PlayerScore socket={socket} playerIndex={0} />
+      <PlayerScore socket={socket} playerIndex={0} isLocalGame={isLocalGame} />
       <Plate>
         {room.game.board.map((row, index) => (
-          <PlateRow key={index} socket={socket} index={index} row={row} />
+          <PlateRow
+            key={index}
+            socket={socket}
+            index={index}
+            row={row}
+            isLocalGame={isLocalGame}
+          />
         ))}
         {(room.game.state === "gameStarted" ||
           room.game.state === "gameEnded") && (
           <GameInformation socket={socket} />
         )}
       </Plate>
-      <PlayerScore socket={socket} playerIndex={1} />
+      <PlayerScore socket={socket} playerIndex={1} isLocalGame={isLocalGame} />
       {(room.game.state === "lookingForPlayers" ||
         room.game.state === "oponentLeftLobby") && (
         <WaitingForPlayer socket={socket} />
