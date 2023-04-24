@@ -1,11 +1,11 @@
-
-import { Server } from 'socket.io';
+import { Socket, Server } from 'socket.io';
 import { RoomType } from "../types/RoomType"
 import { updateRoomAndEmit } from '../functions/globalFunctions';
 
 import { PrivateLobbyType } from '../types/PrivateLobbyType';
 
-export default function handleDisconnect({ io, rooms, privateRooms, currentRoom, socketPlayerId, clearTimerCallback }: {
+export default function handleDisconnect({ socket, io, rooms, privateRooms, currentRoom, socketPlayerId, clearTimerCallback }: {
+  socket: Socket
   io: Server
   rooms: Array<RoomType>
   privateRooms: Array<PrivateLobbyType>
@@ -40,6 +40,7 @@ export default function handleDisconnect({ io, rooms, privateRooms, currentRoom,
 
     if (room.players.length === 1) {
       room.game.state = "oponentLeftLobby"
+      socket.leave(room.lobby)
       updateRoomAndEmit({ io, room })
     } else {
       updateRoomAndEmit({ io, removed: room.lobby })

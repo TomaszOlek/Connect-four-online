@@ -1,7 +1,11 @@
 
-export type roomDataAction = {
+export type updateRoomAction = {
   type: "roomData/updateRoomData";
   payload: roomType;
+}
+
+export type resetRoomAction = {
+  type: "roomData/resetRoomData";
 }
 
 type PlayerType = {
@@ -60,12 +64,14 @@ export const initialState: roomType = {
 
 
 
-function roomData(state: roomType = initialState, action: roomDataAction) {
+function roomData(state: roomType = initialState, action: updateRoomAction | resetRoomAction) {
   switch (action.type) {
     case "roomData/updateRoomData":
       return {
         ...action.payload
       };
+    case "roomData/resetRoomData":
+      return initialState;
     default:
       return state;
   }

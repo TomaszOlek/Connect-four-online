@@ -6,8 +6,10 @@ import WaitingForPlayer from "./WaitingForPlayer";
 import PlateRow from "./PlateRow";
 import GameInformation from "./GameInformation";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../reducers";
+import Logo from "./Logo";
+import { restartRoomData } from "../actions";
 
 interface BackgroundDecorationProps {
   playerWon: 1 | 2 | 0 | "draw" | false;
@@ -15,10 +17,19 @@ interface BackgroundDecorationProps {
 
 function Board({ socket }: { socket: Socket }) {
   const room = useSelector((state: RootState) => state.roomData);
+  const dispatch = useDispatch();
   const isLocalGame = room.lobby.startsWith("Local");
+
+  const leaveLobby = () => {
+    dispatch(restartRoomData());
+    socket.emit("leaveLobby");
+  };
 
   return (
     <Conteiner>
+      <div style={{ position: "absolute", top: "30px" }} onClick={leaveLobby}>
+        <Logo />
+      </div>
       <LobbyTitle>Lobby: {room.lobby}</LobbyTitle>
 
       <PlayerScore socket={socket} playerIndex={0} isLocalGame={isLocalGame} />

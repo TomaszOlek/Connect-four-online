@@ -5,6 +5,10 @@ export const updateRoomData = (roomData: roomType) => ({
   payload: roomData
 });
 
+export const restartRoomData = () => ({
+  type: "roomData/resetRoomData",
+});
+
 export const updatePrivateRoomData = (roomData: roomType) => ({
   type: "privateRoomData/updatePrivateRoomData",
   payload: roomData
