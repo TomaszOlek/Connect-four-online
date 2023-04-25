@@ -69,10 +69,10 @@ io.on("connection", (socket) => {
   })
 
   socket.on("leaveLobby", () => {
-    handleDisconnect({ io, rooms, privateRooms, currentRoom, socketPlayerId, clearTimerCallback })
+    handleDisconnect({ socket, io, rooms, privateRooms, currentRoom, socketPlayerId, clearTimerCallback })
   })
   socket.on("disconnect", () =>
-    handleDisconnect({ io, rooms, privateRooms, currentRoom, socketPlayerId, clearTimerCallback })
+    handleDisconnect({ socket, io, rooms, privateRooms, currentRoom, socketPlayerId, clearTimerCallback })
   );
 });
 

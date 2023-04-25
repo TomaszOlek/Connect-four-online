@@ -41,7 +41,7 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
               </WaitingOponent>
             ))}
 
-          {room.game.state === "lookingForPlayers" &&
+          {room.game.state === "oponentLeftLobby" &&
           room.lobby.startsWith("Private") ? (
             <>
               <WaitingOponent>
