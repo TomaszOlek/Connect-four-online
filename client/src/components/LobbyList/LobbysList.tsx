@@ -8,20 +8,21 @@ import { useState } from "react";
 function LobbysList({ socket }: { socket: Socket }) {
   const [showLoginForm, setShowLoginFrom] = useState(false);
   const [selectedLobby, setSelectedLobby] = useState(0);
-
   const [lobbyPassword, setLobbyPassword] = useState("");
 
   const privateLobbys = useSelector(
     (state: RootState) => state.privateRoomData
   );
 
-  const handelLoginForm = (state: boolean, index: number) => {
+  const handleLoginForm = (state: boolean, index: number) => {
     setShowLoginFrom(state);
     setSelectedLobby(index);
   };
-  const handelJoinPrivateLobby = () => {
-    if (lobbyPassword === privateLobbys[selectedLobby].lobbyPassworld) {
-      socket.emit("joinPrivateLobby", privateLobbys[selectedLobby].lobby);
+  const handleJoinPrivateLobby = () => {
+    const lobby = privateLobbys[selectedLobby];
+
+    if (lobbyPassword === lobby.lobbyPassworld) {
+      socket.emit("joinPrivateLobby", lobby.lobby);
     }
   };
 
@@ -33,16 +34,16 @@ function LobbysList({ socket }: { socket: Socket }) {
           <Lobby key={idx}>
             <h4>{item.lobbyName}</h4>
             <button
-              onClick={() => handelLoginForm(true, idx)}
+              onClick={() => handleLoginForm(true, idx)}
               disabled={
-                !(
-                  item.game.state === "lookingForPlayers" ||
-                  item.game.state === "oponentLeftLobby"
+                !["lookingForPlayers", "oponentLeftLobby"].includes(
+                  item.game.state
                 )
               }
             >
-              {item.game.state === "lookingForPlayers" ||
-              item.game.state === "oponentLeftLobby"
+              {["lookingForPlayers", "oponentLeftLobby"].includes(
+                item.game.state
+              )
                 ? "Join"
                 : "On Going"}
             </button>
@@ -50,25 +51,29 @@ function LobbysList({ socket }: { socket: Socket }) {
         ))}
       </Lobbys>
       {showLoginForm && (
-        <div style={{ position: "relative" }}>
+        <LoginFormWrapper>
           <LoginForm>
-            <h4>To join please enter the Password</h4>
+            <h4>To join, please enter the password</h4>
             <h5>Lobby name: {privateLobbys[selectedLobby].lobbyName}</h5>
             <input
               placeholder="Password"
               onChange={(e) => setLobbyPassword(e.target.value)}
             />
-            <button onClick={() => handelJoinPrivateLobby()}>
+            <button onClick={() => handleJoinPrivateLobby()}>
               Enter Password
             </button>
           </LoginForm>
-        </div>
+        </LoginFormWrapper>
       )}
     </Container>
   );
 }
 
 export default LobbysList;
+
+const LoginFormWrapper = styled.div`
+  position: relative;
+`;
 const LoginForm = styled.div`
   width: 300px;
   height: 140px;

@@ -4,6 +4,8 @@ import { Icon } from "@iconify/react";
 import { useDispatch } from "react-redux";
 import { updateShowBotDifficult, updateRoomData } from "../../actions";
 
+import { roomType } from "../../reducers/roomData";
+
 interface ButtonProps {
   backgroundColor: string;
 }
@@ -25,7 +27,7 @@ export default function BotDifficultySelection() {
   };
 
   const setLobbyWithBotDifficulty = (difficulty: number) => {
-    const Section = {
+    const Section: roomType = {
       lobby: `Local | Difficulty: ${difficultyScores[difficulty]}`,
       game: {
         state: "gameStarted",

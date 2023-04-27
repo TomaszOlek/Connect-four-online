@@ -1,6 +1,7 @@
-import { MinMaxType } from "./BoardFunctionsTypes"
+import { MinMaxType } from "../Types/BotComponentsTypes"
+import { roomType } from "../../reducers/roomData"
 
-const coppyBoard = (board: Array<Array<0 | 1 | 2>>) => {
+const coppyBoard = (board: Array<Array<0 | 1 | 2>>): Array<Array<0 | 1 | 2>> => {
   return (JSON.parse(JSON.stringify(board)))
 }
 
@@ -8,7 +9,7 @@ export const getNextMove = async (board: Array<Array<0 | 1 | 2>>, difficulty: nu
 
   const minMaxObject: MinMaxType = {
     board: coppyBoard(board),
-    depth: difficulty, // Max is 7 over that game slowes downs
+    depth: difficulty,  //If the difficulty is higher than 7 the function slows down drastically
     playerMove: { score: -9999999 },
     botMove: { score: 9999999 },
     maximizingPlayer: false
@@ -16,7 +17,8 @@ export const getNextMove = async (board: Array<Array<0 | 1 | 2>>, difficulty: nu
   return MinMax(minMaxObject);
 }
 
-const placeMove = (newBoard, player, columnMove) => {
+//
+const placeMove = (newBoard: Array<Array<0 | 1 | 2>>, player: 1 | 2, columnMove: number) => {
   let lastIndex = newBoard[columnMove].lastIndexOf(0);
   if (lastIndex !== -1) {
     newBoard[columnMove].splice(lastIndex, 1, player);
@@ -29,15 +31,14 @@ const MinMax = ({ board, depth, playerMove, botMove, maximizingPlayer }: MinMaxT
   let currentScore = getScore(board);
   let possibleMoves = [];
 
-  // //Check all possible moves
-  let player = maximizingPlayer ? 1 : 2;
+  //Check all posible moves if it's posible then add it to possibleMoves
+  let player: 1 | 2 = maximizingPlayer ? 1 : 2;
   for (let column = 0; column < 7; column++) {
     let nextPossibleBoard = placeMove(coppyBoard(board), player, column);
     if (nextPossibleBoard) possibleMoves[column] = nextPossibleBoard;
   };
 
   let isDrawn = possibleMoves.length === 0;
-
 
   if (depth == 0 || isDrawn || currentScore <= -100000 || currentScore >= 100000) {
     let leaf = {
@@ -59,8 +60,6 @@ const MinMax = ({ board, depth, playerMove, botMove, maximizingPlayer }: MinMaxT
     }
   }
 
-
-  // Recursion
   for (let i = 0; i <= possibleMoves.length - 1; i++) {
     if (!possibleMoves[i]) continue;
     const minMaxObject: MinMaxType = {
@@ -91,18 +90,23 @@ const MinMax = ({ board, depth, playerMove, botMove, maximizingPlayer }: MinMaxT
   return recursionScore;
 }
 
-const min = function (x, y) {
+type leaf = {
+  columnMove?: number | null,
+  score: number
+}
+
+const min = function (x: leaf, y: leaf) {
   return x.score < y.score ? JSON.parse(JSON.stringify(x)) : JSON.parse(JSON.stringify(y));
 }
 
-const max = function (x, y) {
+const max = function (x: leaf, y: leaf) {
   return x.score > y.score ? JSON.parse(JSON.stringify(x)) : JSON.parse(JSON.stringify(y))
 }
 
 const getScore = function (board: Array<Array<0 | 1 | 2>>): number {
   let score = 0;
 
-  function updateScore(HumanInRow, ComputerInRow) {
+  function updateScore(HumanInRow: number, ComputerInRow: number) {
     let points = 0;
     switch (HumanInRow) {
       case 4:
@@ -206,7 +210,7 @@ const getScore = function (board: Array<Array<0 | 1 | 2>>): number {
   return score;
 }
 
-export const handleChipDrop = (room, index) => {
+export const handleChipDrop = (room: roomType, index: number) => {
   const selectedRow = room.game.board[index]
 
   let lastIndex = selectedRow.lastIndexOf(0);

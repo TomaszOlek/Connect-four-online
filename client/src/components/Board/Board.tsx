@@ -7,9 +7,9 @@ import PlateRow from "./PlateRow";
 import GameInformation from "./GameInformation";
 
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../reducers";
-import Logo from "./Logo";
-import { restartRoomData } from "../actions";
+import { RootState } from "../../reducers";
+import Logo from "../Utils/Logo";
+import { restartRoomData } from "../../actions";
 
 interface BackgroundDecorationProps {
   playerWon: 1 | 2 | 0 | "draw" | false;
@@ -20,6 +20,8 @@ function Board({ socket }: { socket: Socket }) {
   const dispatch = useDispatch();
   const isLocalGame = room.lobby.startsWith("Local");
 
+  const roomState = room.game.state;
+
   const leaveLobby = () => {
     dispatch(restartRoomData());
     socket.emit("leaveLobby");
@@ -27,9 +29,9 @@ function Board({ socket }: { socket: Socket }) {
 
   return (
     <Conteiner>
-      <div style={{ position: "absolute", top: "30px" }} onClick={leaveLobby}>
+      <LogoContainer onClick={leaveLobby}>
         <Logo />
-      </div>
+      </LogoContainer>
       <LobbyTitle>Lobby: {room.lobby}</LobbyTitle>
 
       <PlayerScore socket={socket} playerIndex={0} isLocalGame={isLocalGame} />
@@ -43,18 +45,16 @@ function Board({ socket }: { socket: Socket }) {
             isLocalGame={isLocalGame}
           />
         ))}
-        {(room.game.state === "gameStarted" ||
-          room.game.state === "gameEnded") && (
+        {["gameStarted", "gameEnded"].includes(roomState) && (
           <GameInformation socket={socket} />
         )}
       </Plate>
       <PlayerScore socket={socket} playerIndex={1} isLocalGame={isLocalGame} />
-      {(room.game.state === "lookingForPlayers" ||
-        room.game.state === "oponentLeftLobby") && (
+      {["lookingForPlayers", "oponentLeftLobby"].includes(roomState) && (
         <WaitingForPlayer socket={socket} />
       )}
       <BackgroundDecoration
-        playerWon={room.game.state === "gameEnded" && room.game.score.lastWin}
+        playerWon={roomState === "gameEnded" && room.game.score.lastWin}
       />
     </Conteiner>
   );
@@ -62,6 +62,10 @@ function Board({ socket }: { socket: Socket }) {
 
 export default Board;
 
+const LogoContainer = styled.div`
+  position: absolute;
+  top: 30px;
+`;
 const Conteiner = styled.div`
   width: 100%;
   height: 100%;

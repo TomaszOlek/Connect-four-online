@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Socket } from "socket.io-client";
 
 import MainMenu from "./components/MainMenu";
-import Board from "./components/Board";
+import Board from "./components/Board/Board";
 import Rules from "./components/Rules";
 import LobbyContainer from "./components/LobbyList/LobbyContainer";
 import BotDifficultySelection from "./components/BotComponents/BotDifficultySelection";
@@ -38,6 +38,7 @@ function App({ socket }: { socket: Socket }) {
         closeAllMenu();
       }
     });
+
     socket.on("updatePrivateLobbys", (roomsData) => {
       dispatch(updatePrivateRoomData(roomsData));
     });
@@ -54,13 +55,16 @@ function App({ socket }: { socket: Socket }) {
     dispatch(updateShowBotDifficult(false));
   };
 
+  const renderMenu = () => {
+    if (room.lobby === "" || !room.lobby) {
+      return <MainMenu socket={socket} />;
+    }
+    return <Board socket={socket} />;
+  };
+
   return (
     <Conteiner>
-      {room.lobby === "" || !room.lobby ? (
-        <MainMenu socket={socket} />
-      ) : (
-        <Board socket={socket} />
-      )}
+      {renderMenu()}
       {isShowRules && <Rules />}
       {isShowLobbys && <LobbyContainer socket={socket} />}
       {isShowBotDifficulty && <BotDifficultySelection />}

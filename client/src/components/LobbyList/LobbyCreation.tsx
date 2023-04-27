@@ -13,12 +13,11 @@ function LobbyCreation({ socket }: { socket: Socket }) {
     (state: RootState) => state.privateRoomData
   );
 
-  const handelCreateLobby = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateLobby = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (privateLobbys.some((item) => item.lobbyName === lobbyName)) {
-      //Notification: LobbyName Taken
-      console.log("LobbyName Taken");
+      console.log("LobbyName Taken"); //TODO: LobbyName Taken Notification
     } else {
       socket.emit("createPrivateLobby", { lobbyName, lobbyPassword });
     }
@@ -26,7 +25,7 @@ function LobbyCreation({ socket }: { socket: Socket }) {
 
   return (
     <Container>
-      <Form onSubmit={handelCreateLobby}>
+      <Form onSubmit={handleCreateLobby}>
         <h4>Create Lobby</h4>
         <Input
           placeholder="Lobby name"
@@ -37,12 +36,12 @@ function LobbyCreation({ socket }: { socket: Socket }) {
         />
         <Input
           placeholder="Password"
-          type="text"
+          type="password"
           required
           maxLength={20}
           onChange={(e) => setLobbyPassword(e.target.value)}
         />
-        <button type="submit">Create</button>
+        <Button type="submit">Create</Button>
       </Form>
     </Container>
   );
@@ -53,10 +52,24 @@ export default LobbyCreation;
 const Input = styled.input`
   border: 1px solid black;
 `;
+
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 5px;
+`;
+
+const Button = styled.button`
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #303f9f;
+  }
 `;
 
 const Container = styled.div`

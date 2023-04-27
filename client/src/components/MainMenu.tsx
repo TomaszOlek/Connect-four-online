@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Icon } from "@iconify/react";
 import { Socket } from "socket.io-client";
 
-import Logo from "./Logo";
+import Logo from "./Utils/Logo";
 
 import { useDispatch } from "react-redux";
 import {
