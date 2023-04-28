@@ -6,3 +6,8 @@ export type MinMaxType = {
   botMove: { score: number },
   maximizingPlayer: boolean,
 }
+
+export type leaf = {
+  columnMove?: number | null,
+  score: number
+}
