@@ -33,9 +33,9 @@ function PlateRow({
   const [isPlayerTurn, setIsPlayerTurn] = useState(false);
   const room = useSelector((state: RootState) => state.roomData);
   const dispatch = useDispatch();
-  let playerIndex;
+  let playerIndex = 0;
 
-  if (!isLocalGame) {
+  if (!isLocalGame && "players" in room) {
     playerIndex = room.players.findIndex(
       (player) => player.playerId === socket.id
     );
@@ -45,7 +45,7 @@ function PlateRow({
   useEffect(() => {
     if (isLocalGame) {
       setIsPlayerTurn(room.game.playerTurn.playerName === "Player");
-    } else {
+    } else if ("playerId" in room.game.playerTurn) {
       setIsPlayerTurn(room.game.playerTurn.playerId === socket.id);
     }
   }, [room, socket]);
@@ -107,8 +107,8 @@ function PlateRow({
         src={
           isLocalGame
             ? redMarker
-            : // @ts-ignore TODO
-            room.players[playerIndex].playerName === "Player1"
+            : "players" in room &&
+              room.players[playerIndex].playerName === "Player1"
             ? redMarker
             : yellowMarker
         }
@@ -162,6 +162,8 @@ const RowPointer = styled.img`
   user-select: none;
 `;
 const RowContainer = styled.div<RowContainerType>`
+  cursor: pointer;
+
   position: relative;
   display: flex;
   flex-direction: column;

@@ -77,7 +77,8 @@ const Button = styled.button<ButtonProps>`
   display: inline-block;
   font-weight: 600;
   font-size: 18px;
-  padding: 0 18px;
+  padding: 0 27px;
+
   line-height: 50px;
   text-align: center;
   user-select: none;
@@ -85,8 +86,10 @@ const Button = styled.button<ButtonProps>`
   touch-action: manipulation;
 
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+
+  transition: filter 0.3s;
 
   &:hover {
     filter: brightness(0.9);

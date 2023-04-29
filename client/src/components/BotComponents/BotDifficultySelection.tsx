@@ -102,6 +102,8 @@ const Button = styled.button<ButtonProps>`
   justify-content: space-between;
   align-items: center;
 
+  transition: filter 0.3s;
+
   &:hover {
     filter: brightness(0.9);
   }

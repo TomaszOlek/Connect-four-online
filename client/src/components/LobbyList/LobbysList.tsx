@@ -59,9 +59,9 @@ function LobbysList({ socket }: { socket: Socket }) {
               placeholder="Password"
               onChange={(e) => setLobbyPassword(e.target.value)}
             />
-            <button onClick={() => handleJoinPrivateLobby()}>
+            <Button onClick={() => handleJoinPrivateLobby()}>
               Enter Password
-            </button>
+            </Button>
           </LoginForm>
         </LoginFormWrapper>
       )}
@@ -73,6 +73,19 @@ export default LobbysList;
 
 const LoginFormWrapper = styled.div`
   position: relative;
+`;
+const Button = styled.button`
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #303f9f;
+  }
 `;
 const LoginForm = styled.div`
   width: 300px;

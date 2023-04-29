@@ -16,25 +16,29 @@ function PlayerScore({ socket, playerIndex, isLocalGame }: PlayerScoreProps) {
   const room = useSelector((state: RootState) => state.roomData);
 
   const playerNameLocal = playerIndex === 0 ? "You" : "Bot";
+  let playerName: string = "";
+  let overtimeTimeStyle: React.CSSProperties = {};
 
-  const playerName = room.players[playerIndex]
-    ? room.players[playerIndex].playerId === socket.id
-      ? "You"
-      : room.players[playerIndex].playerName
-    : `Player${playerIndex + 1}`;
+  if (!isLocalGame && "players" in room) {
+    const playerName = room.players[playerIndex]
+      ? room.players[playerIndex].playerId === socket.id
+        ? "You"
+        : room.players[playerIndex].playerName
+      : `Player${playerIndex + 1}`;
 
-  const overtimeTime =
-    !isLocalGame &&
-    room.players[playerIndex] &&
-    room.players[playerIndex].overtimeTime;
+    const overtimeTime =
+      !isLocalGame &&
+      room.players[playerIndex] &&
+      room.players[playerIndex].overtimeTime;
+
+    const overtimeTimeStyle =
+      overtimeTime && overtimeTime <= 5 ? { color: "red" } : {};
+  }
 
   const playerWins =
     playerIndex === 0
       ? room.game.score.playerOneWins
       : room.game.score.playerTwoWins;
-
-  const overtimeTimeStyle =
-    overtimeTime && overtimeTime <= 5 ? { color: "red" } : {};
 
   return (
     <Container>
@@ -44,7 +48,7 @@ function PlayerScore({ socket, playerIndex, isLocalGame }: PlayerScoreProps) {
       ) : (
         <PlayerName>{playerName}</PlayerName>
       )}
-      {!isLocalGame && (
+      {!isLocalGame && "players" in room && (
         <PlayerOvertime style={overtimeTimeStyle}>
           Extra time:{" "}
           {room.players[playerIndex]

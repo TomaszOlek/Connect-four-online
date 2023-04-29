@@ -12,7 +12,7 @@ import { isEven } from "../Utils/Functions";
 type WinConteinerType = {
   gameState: {
     state: string;
-    player: 1 | 2;
+    player: 0 | 1 | 2;
   };
 };
 
@@ -47,7 +47,6 @@ function GameInformation({ socket }: { socket: Socket }) {
         getNextMove(roomCoppy.game.board, 2).then((move) => {
           roomCoppy = handleChipDrop(roomCoppy, move.columnMove);
           dispatch(updateRoomData(roomCoppy));
-          console.log("Bot move ", move.columnMove);
         });
       }, 200);
     } else {
