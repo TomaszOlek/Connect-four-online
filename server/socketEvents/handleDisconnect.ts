@@ -13,7 +13,7 @@ export default function handleDisconnect({ socket, io, rooms, privateRooms, curr
   socketPlayerId: string
   clearTimerCallback: () => void
 }) {
-  if (!currentRoom) {
+  if (!currentRoom || currentRoom.startsWith("Local")) {
     return;
   }
   let room: PrivateLobbyType | RoomType
