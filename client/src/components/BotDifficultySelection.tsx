@@ -8,7 +8,7 @@ interface ButtonProps {
   backgroundColor: string;
 }
 
-export default function BotDifficultySelection() {
+function BotDifficultySelection() {
   const dispatch = useDispatch();
 
   const handleHideLobbys = () => {
@@ -17,7 +17,7 @@ export default function BotDifficultySelection() {
   return (
     <ConteinerBackground onClick={handleHideLobbys}>
       <Conteiner onClick={(e) => e.stopPropagation()}>
-        <h2 style={{ marginBottom: "10px" }}>Chose Bot Difficulty :</h2>
+        <BotDifficulty>Chose Bot Difficulty :</BotDifficulty>
         <Button backgroundColor="#21d91e">
           Easy <Icon icon="mdi:face-happy-outline" />
         </Button>
@@ -31,7 +31,11 @@ export default function BotDifficultySelection() {
     </ConteinerBackground>
   );
 }
+export default BotDifficultySelection;
 
+const BotDifficulty = styled.div`
+  margin-bottom: 10px;
+`;
 const Button = styled.button<ButtonProps>`
   width: 200px;
   background-color: ${(props) =>
@@ -85,7 +89,6 @@ const Conteiner = styled.div`
   gap: 8px;
   z-index: 2;
 `;
-
 const ConteinerBackground = styled.div`
   width: 100%;
   height: 100%;

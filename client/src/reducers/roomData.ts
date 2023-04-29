@@ -16,15 +16,15 @@ type PlayerType = {
 
 export type roomType = {
   lobby: string;
-  lobbyName?: string,
-  lobbyPassworld?: string,
+  lobbyName?: string;
+  lobbyPassworld?: string;
   game: {
     state: string;
     board: Array<Array<0 | 1 | 2>>;
     playerTurn: {
       playerId: string;
       playerName: string;
-      playerIndex: 1 | 2
+      playerIndex: 0 | 1 | 2
       remainingTime: number | "FirstMove";
     };
     score: {
@@ -39,6 +39,22 @@ export type roomType = {
     votes: number;
     playersVoted: Array<string>
   }
+} | {
+  lobby: string;
+  game: {
+    state: string;
+    difficulty: number;
+    board: Array<Array<0 | 1 | 2>>;
+    playerTurn: {
+      playerName: string;
+      playerIndex: 0 | 1 | 2;
+    };
+    score: {
+      lastWin: 0 | 1 | 2 | "draw";
+      playerOneWins: number;
+      playerTwoWins: number;
+    };
+  };
 };
 
 export const initialState: roomType = {

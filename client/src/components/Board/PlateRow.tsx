@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Socket } from "socket.io-client";
 
-import yellowMarker from "../assets/marker-yellow.svg";
-import redMarker from "../assets/marker-red.svg";
+import yellowMarker from "../../assets/marker-yellow.svg";
+import redMarker from "../../assets/marker-red.svg";
 
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../reducers";
+import { RootState } from "../../reducers";
 
-import { handleChipDrop, getNextMove } from "./BotComponents/BoardFunctions";
+import { handleChipDrop, getNextMove } from "../BotComponents/BoardFunctions";
 
-import { updateRoomData } from "../actions";
+import { updateRoomData } from "../../actions";
 
 type ChipType = {
   variant: "red" | "yellow" | "empty";
@@ -39,7 +39,7 @@ function PlateRow({
     playerIndex = room.players.findIndex(
       (player) => player.playerId === socket.id
     );
-    //TODO: Not found Player
+    //TODO: Player Not found
   }
 
   useEffect(() => {
@@ -107,7 +107,8 @@ function PlateRow({
         src={
           isLocalGame
             ? redMarker
-            : playerIndex && room.players[playerIndex].playerName === "Player1"
+            : // @ts-ignore TODO
+            room.players[playerIndex].playerName === "Player1"
             ? redMarker
             : yellowMarker
         }
@@ -172,7 +173,7 @@ const RowContainer = styled.div<RowContainerType>`
     props.isPlayerTurn &&
     `
       &:hover > #arrow {
-      display: block;
+        display: block;
       }
     `}
 `;

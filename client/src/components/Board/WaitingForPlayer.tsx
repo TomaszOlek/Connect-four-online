@@ -1,8 +1,9 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { Socket } from "socket.io-client";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../reducers";
+import { RootState } from "../../reducers";
+import Loader from "../Utils/Loader";
 
 function WaitingForPlayer({ socket }: { socket: Socket }) {
   const handelLeaveLobby = () => {
@@ -19,12 +20,7 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
               <>
                 <WaitingOponent>
                   <p>Waiting for an Oponent</p>
-                  <Loader>
-                    <Dot />
-                    <Dot />
-                    <Dot />
-                    <Dot />
-                  </Loader>
+                  <Loader />
                 </WaitingOponent>
                 <p>Lobby Name: {room.lobbyName}</p>
                 <p>Lobby Password: {room.lobbyPassworld}</p>
@@ -32,12 +28,7 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
             ) : (
               <WaitingOponent>
                 <p>Waiting for an Opponent</p>
-                <Loader>
-                  <Dot />
-                  <Dot />
-                  <Dot />
-                  <Dot />
-                </Loader>
+                <Loader />
               </WaitingOponent>
             ))}
 
@@ -46,12 +37,7 @@ function WaitingForPlayer({ socket }: { socket: Socket }) {
             <>
               <WaitingOponent>
                 <p>Your opponent left the lobby. Waiting for a new Oponen</p>
-                <Loader>
-                  <Dot />
-                  <Dot />
-                  <Dot />
-                  <Dot />
-                </Loader>
+                <Loader />
               </WaitingOponent>
               <p>Lobby Name: {room.lobbyName}</p>
               <p>Lobby Password: {room.lobbyPassworld}</p>
@@ -148,61 +134,5 @@ const LeaveButton = styled.button`
     background-color: #8c8c8c;
     color: rgba(0, 0, 0, 0.65);
     transform: translateY(0);
-  }
-`;
-const Loader = styled.div`
-  display: inline-block;
-  position: relative;
-  width: 30px;
-  height: 30px;
-`;
-const ldsEllipsis1 = keyframes`
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-`;
-const ldsEllipsis2 = keyframes`
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-      transform: translate(6px, 0);
-    }
-`;
-const ldsEllipsis3 = keyframes`
-    0% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(0);
-    }
-`;
-const Dot = styled.div`
-  position: absolute;
-  top: 10px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #000000;
-  animation-timing-function: cubic-bezier(0, 1, 1, 0);
-
-  &:nth-child(1) {
-    left: 2px;
-    animation: ${ldsEllipsis1} 0.6s infinite;
-  }
-  &:nth-child(2) {
-    left: 2px;
-    animation: ${ldsEllipsis2} 0.6s infinite;
-  }
-  &:nth-child(3) {
-    left: 7px;
-    animation: ${ldsEllipsis2} 0.6s infinite;
-  }
-  &:nth-child(4) {
-    left: 13px;
-    animation: ${ldsEllipsis3} 0.6s infinite;
   }
 `;

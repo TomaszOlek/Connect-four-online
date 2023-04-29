@@ -15,22 +15,22 @@ function LobbyContainer({ socket }: { socket: Socket }) {
   };
 
   return (
-    <ConteinerBackground onClick={handleHideLobbys}>
-      <Conteiner onClick={(e) => e.stopPropagation()}>
+    <ContainerBackground onClick={handleHideLobbys}>
+      <Container onClick={(e) => e.stopPropagation()}>
         <LobbyCreation socket={socket} />
         <LobbysList socket={socket} />
-      </Conteiner>
-    </ConteinerBackground>
+      </Container>
+    </ContainerBackground>
   );
 }
 
 export default LobbyContainer;
 
-const ConteinerBackground = styled.div`
+const ContainerBackground = styled.div`
   width: 100%;
   height: 100%;
 
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 
@@ -38,16 +38,12 @@ const ConteinerBackground = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: #3632325e;
+  background-color: rgba(54, 50, 50, 0.37);
   z-index: 2;
 `;
-const Conteiner = styled.div`
+const Container = styled.div`
   width: 500px;
   padding: 40px 30px;
-
-  background-color: white;
-  border: 3px solid black;
-  border-radius: 20px;
 
   display: flex;
   flex-direction: row;
@@ -55,4 +51,8 @@ const Conteiner = styled.div`
   align-items: center;
   gap: 8px;
   z-index: 2;
+
+  background-color: white;
+  border: 3px solid black;
+  border-radius: 20px;
 `;
