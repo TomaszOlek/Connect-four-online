@@ -52,6 +52,6 @@ export default function handleDisconnect({ socket, io, rooms, privateRooms, curr
       }
     }
   } else {
-    console.log("User was in lobby but the lobby was not found?? (BAD)")
+    console.log("User was in lobby but the lobby was not found?? (BAD)", currentRoom)
   }
 }
