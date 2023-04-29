@@ -91,7 +91,6 @@ function PlateRow({
         getNextMove(updatedRoom.game.board, 2).then((move) => {
           roomCoppy = handleChipDrop(roomCoppy, move.columnMove);
           dispatch(updateRoomData(roomCoppy));
-          console.log("Bot move ", move.columnMove);
         });
       }, 200);
     }
