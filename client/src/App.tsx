@@ -29,11 +29,29 @@ function App({ socket }: { socket: Socket }) {
   );
 
   useEffect(() => {
+    const handleBackButton = (event: Event) => {
+      // prevent the default behavior of the back button
+      event.preventDefault();
+      //leave the lobby and update the room
+      dispatch(updateRoomData(initialState));
+      socket.emit("leaveLobby");
+    };
+
     socket.on("updateRoom", (roomData) => {
       if (roomData === "removed") {
         dispatch(updateRoomData(initialState));
         closeAllMenu();
       } else {
+        if (roomData.lobby !== "") {
+          window.history.pushState({ roomData }, "");
+          // add the event listener for the back button
+          window.addEventListener("popstate", handleBackButton);
+        } else {
+          // remove the history state when we are not in lobby
+          window.history.back();
+          // remove the event listener for the back button
+          window.removeEventListener("popstate", handleBackButton);
+        }
         dispatch(updateRoomData(roomData));
         closeAllMenu();
       }
